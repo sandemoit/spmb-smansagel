@@ -11,16 +11,19 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $siswa = Siswa::where('user_id', $user->id)->first();
 
-        // Ambil data siswa berdasarkan email user
-        $siswa = Siswa::where('email', $user->email)->first();
-
+        $biodataComplete = false;
+        $berkasComplete = false;
         $isComplete = false;
 
         if ($siswa) {
-            $isComplete = $siswa->isComplete();
+            $biodataComplete = $siswa->isBiodataComplete();
+            $berkasComplete = $siswa->isBerkasComplete();
+            $nilaiComplete = $siswa->isNilaiComplete();
+            $isComplete = $siswa->checkAndUpdateCompleteStatus(); // sekaligus update ke DB
         }
 
-        return view('dashboard', compact('siswa', 'isComplete'));
+        return view('dashboard', compact('siswa', 'biodataComplete', 'berkasComplete', 'nilaiComplete', 'isComplete'));
     }
 }

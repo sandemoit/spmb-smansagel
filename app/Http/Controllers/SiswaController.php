@@ -1,0 +1,199 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Berkas;
+use App\Models\BerkasPersyaratan;
+use App\Models\JalurPendaftaran;
+use App\Models\Nilai;
+use App\Models\Siswa;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
+class SiswaController extends Controller
+{
+    public function index() {}
+
+    public function biodata()
+    {
+        $jalurs = JalurPendaftaran::get();
+        $siswa = Siswa::where('user_id', Auth::user()->id)->firstOrFail();
+
+        return view('page.pendaftaran.biodata', compact('siswa', 'jalurs'));
+    }
+
+    public function biodataUpdate(Request $request)
+    {
+        $siswa = Siswa::where('user_id', Auth::id())->firstOrFail();
+
+        $validated = $request->validate([
+            'nama_siswa' => 'required|string|max:255',
+            'nisn' => 'required|string|max:20',
+            'tempat_lahir' => 'required|string|max:100',
+            'tanggal_lahir' => 'required|date',
+            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'agama' => 'required|string',
+            'no_hp' => 'required|string|max:20',
+            'sekolah_asal' => 'required|string|max:255',
+            'tahun_lulus' => 'required|numeric',
+            'nik' => 'required|string|max:30',
+            'nama_ayah' => 'required|string',
+            'nama_ibu' => 'required|string',
+            'pekerjaan_ayah' => 'required|string',
+            'pekerjaan_ibu' => 'required|string',
+            'penghasilan_ayah' => 'required|string',
+            'penghasilan_ibu' => 'required|string',
+            'jalur_pendaftaran_id' => 'required|exists:jalur_pendaftaran,id',
+            'latitude' => 'required|string',
+            'longitude' => 'required|string',
+            'upload_kk' => 'nullable|file|mimes:pdf|max:2048',
+            'foto_3x4' => 'nullable|file|mimes:jpg,jpeg,png|max:1024',
+            'jarak_kesekolah' => 'required|numeric',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Simpan file jika ada
+            if ($request->hasFile('upload_kk')) {
+                $file = $request->file('upload_kk');
+                $fileName = Str::slug($validated['nama_siswa'], '_') . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('kk'), $fileName);
+                $validated['upload_kk'] = "kk/$fileName";
+            }
+
+            if ($request->hasFile('foto_3x4')) {
+                $file = $request->file('foto_3x4');
+                $fileName = Str::slug($validated['nama_siswa'], '_') . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('foto'), $fileName);
+                $validated['foto_3x4'] = "foto/$fileName";
+            }
+
+            $siswa->update($validated);
+
+            DB::commit();
+            if (in_array($siswa->jalur_pendaftaran_id, [5, 6])) {
+                return redirect()->route('siswa.berkas')->with('success', 'Biodata berhasil diperbarui.');
+            }
+            return redirect()->route('siswa.nilai')->with('success', 'Biodata berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan. Biodata gagal diperbarui.');
+        }
+    }
+
+    public function nilai()
+    {
+        return view('page.pendaftaran.nilai');
+    }
+
+    public function nilaiStore(Request $request)
+    {
+        $siswaId = Auth::user()->siswa->id; // asumsi relasi user → siswa
+
+        $request->validate([
+            'nilai' => 'required|array',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($request->nilai as $nama => $nilai) {
+                Nilai::updateOrCreate(
+                    [
+                        'siswa_id' => $siswaId,
+                        'nama' => $nama,
+                    ],
+                    [
+                        'nilai' => $nilai,
+                        'semester' => (int) filter_var($nama, FILTER_SANITIZE_NUMBER_INT),
+                    ]
+                );
+            }
+
+            DB::commit();
+            return redirect()->route('siswa.berkas')->with('success', 'Nilai berhasil disimpan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan nilai.');
+        }
+    }
+
+    public function berkas()
+    {
+        $user = Auth::user();
+        $siswa = Siswa::where('user_id', $user->id)->with('jalur_pendaftaran')->firstOrFail();
+
+        $berkasPersyaratans = BerkasPersyaratan::where('jalur_pendaftaran_id', $siswa->jalur_pendaftaran_id)->get();
+
+        // Ambil berkas yang sudah diupload siswa
+        $berkasUploaded = Berkas::where('siswa_id', $siswa->id)->get()->keyBy('berkas_persyaratan_id');
+
+        if ($siswa->is_complete) {
+            return redirect()->route('dashboard')->with('success', 'Berkas berhasil diupload.');
+        }
+
+        return view('page.pendaftaran.berkas', compact('berkasPersyaratans', 'berkasUploaded', 'siswa'));
+    }
+
+    public function uploadBerkas(Request $request)
+    {
+        $user = Auth::user();
+        $siswa = Siswa::where('user_id', $user->id)->firstOrFail();
+
+        $request->validate([
+            'berkas.*' => 'file|mimes:pdf|max:2048', // Only PDF files, max 2MB
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($request->file('berkas', []) as $berkasPersyaratanId => $file) {
+                if ($file) {
+                    $filaName = Str::slug($siswa->nama_siswa, '_')  . '.' . $file->getClientOriginalExtension();
+                    $file->move(public_path('berkas'), $filaName);
+                    $path = "berkas/$filaName";
+
+                    Berkas::updateOrCreate(
+                        [
+                            'siswa_id' => $siswa->id,
+                            'berkas_persyaratan_id' => $berkasPersyaratanId,
+                        ],
+                        ['path_upload' => $path]
+                    );
+                }
+            }
+
+            // Update status kelengkapan
+            $siswa->is_complete = $siswa->isComplete();
+            $siswa->save();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Berkas berhasil diupload.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat mengupload berkas.');
+        }
+    }
+
+    public function lembarVerifikasi()
+    {
+        $user = Auth::user();
+        $siswa = Siswa::where('user_id', $user->id)->with(['user', 'jalur_pendaftaran'])->firstOrFail();
+        $nilais = Nilai::where('siswa_id', $siswa->id)->orderBy('id')->get();
+        $jalur = $siswa->jalur_pendaftaran->nama;
+
+        $pdf = Pdf::loadView('page.pendaftaran.lembar-verifikasi', compact('siswa', 'nilais', 'jalur'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('lembar_verifikasi_' . $siswa->nama . '.pdf');
+    }
+}

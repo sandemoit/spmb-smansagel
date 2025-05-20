@@ -17,6 +17,8 @@ class JalurPendaftaranSeeder extends Seeder
             'Domisili',
             'Afirmasi',
             'Prestasi Akademik',
+            'Prestasi Non Akademik',
+            'Mutasi',
         ];
 
         foreach ($jalur as $nama) {

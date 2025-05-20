@@ -19,19 +19,25 @@ class Siswa extends Model
         'jenis_kelamin',
         'agama',
         'no_hp',
-        'email',
         'sekolah_asal',
         'tahun_lulus',
-        'nik_kk',
+        'nik',
         'foto_3x4',
         'upload_kk',
-        'nama_jalur_pendaftaran',
+        'jalur_pendaftaran_id',
         'nama_ayah',
         'nama_ibu',
         'pekerjaan_ayah',
         'pekerjaan_ibu',
         'penghasilan_ayah',
         'penghasilan_ibu',
+        'longitude',
+        'latitude',
+        'jarak_kesekolah',
+        'status',
+        'no_pendaftaran',
+        'user_id',
+        'is_complete'
     ];
 
     // Jika siswa terhubung dengan user
@@ -40,7 +46,22 @@ class Siswa extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function isComplete()
+    public function nilai()
+    {
+        return $this->hasMany(Nilai::class);
+    }
+
+    public function berkas()
+    {
+        return $this->hasMany(Berkas::class);
+    }
+
+    public function jalur_pendaftaran()
+    {
+        return $this->belongsTo(JalurPendaftaran::class);
+    }
+
+    public function isBiodataComplete()
     {
         foreach ($this->fillable as $field) {
             if (is_null($this->$field) || $this->$field === '') {
@@ -48,5 +69,37 @@ class Siswa extends Model
             }
         }
         return true;
+    }
+
+    public function isNilaiComplete()
+    {
+        return Nilai::where('siswa_id', $this->id)->count() == 25;
+    }
+
+    public function isBerkasComplete()
+    {
+        $jumlahBerkasDibutuhkan = BerkasPersyaratan::where('jalur_pendaftaran_id', $this->jalur_pendaftaran_id)
+            ->count();
+
+        $jumlahBerkasSiswa = Berkas::where('siswa_id', $this->id)->count();
+
+        return $jumlahBerkasSiswa >= $jumlahBerkasDibutuhkan;
+    }
+
+    public function isComplete()
+    {
+        return $this->isBiodataComplete() && $this->isBerkasComplete() && $this->isNilaiComplete();
+    }
+
+    public function checkAndUpdateCompleteStatus()
+    {
+        $isCompleteNow = $this->isComplete();
+        if ($this->is_complete != $isCompleteNow) {
+            $this->is_complete = $isCompleteNow;
+            $this->status = 'verifikasi';
+            $this->save();
+        }
+
+        return $isCompleteNow;
     }
 }

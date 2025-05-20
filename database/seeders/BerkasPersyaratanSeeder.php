@@ -27,7 +27,7 @@ class BerkasPersyaratanSeeder extends Seeder
                 ['KARTU KELUARGA', true],
                 ['AKTE KELAHIRAN', true],
                 ['PERNYATAAN ORANG TUA DI ATAS MATERAI', true],
-                ['PIP/PKH/SUKET DOKTER BAGI DISABILITAS', false],
+                ['PIP/PKH/SUKET DOKTER BAGI DISABILITAS', true],
             ],
             'Prestasi Akademik' => [
                 ['IJAZAH/SURAT KETERANGAN', true],
@@ -35,9 +35,27 @@ class BerkasPersyaratanSeeder extends Seeder
                 ['AKTE KELAHIRAN', true],
                 ['PERNYATAAN ORANG TUA DI ATAS MATERAI', true],
                 ['SPTJM NILAI RAPOR', true],
-                ['SPTJM RANKING/PERINGKAT', false],
+                ['SPTJM RANKING/PERINGKAT', true],
                 ['SPTJM PRESTASI AKADEMIK', true],
             ],
+            'Prestasi Non Akademik' => [
+                ['IJAZAH/SURAT KETERANGAN', true],
+                ['KARTU KELUARGA', true],
+                ['AKTE KELAHIRAN', true],
+                ['PERNYATAAN ORANG TUA DI ATAS MATERAI', true],
+                ['SPTJM NILAI RAPOR', true],
+                ['SPTJM PRESTASI NON-AKADEMI', true],
+                ['SPTJM PENGALAMAN ORGANISASI KESISWAAN', true],
+            ],
+            'Mutasi' => [
+                ['IJAZAH/SURAT KETERANGAN', true],
+                ['SURAT KETERANGAN DOMISILI', true],
+                ['AKTE KELAHIRAN', true],
+                ['PERNYATAAN ORANG TUA DIATAS MATERAI', true],
+                ['SURAT PINDAH TUGAS DARI PIMPINAN INSTASI/LEMBAGA/TNI/POLRI/PERUSAHAN (BUMN/BUMD) YANG MEMPERKERJAAN ORANGTUA', true],
+                ['SURAT PENUGASAN (BAGI ANAK GURU)', false],
+                ['KARTU KELUARGA (BAGI ANAK GURU)', false],
+            ]
         ];
 
         foreach ($berkasData as $jalur => $berkasList) {

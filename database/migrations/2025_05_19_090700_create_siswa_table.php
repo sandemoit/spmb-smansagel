@@ -13,30 +13,38 @@ return new class extends Migration
     {
         Schema::create('siswa', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id');
             $table->string('nama_siswa');
-            $table->string('nisn')->unique();
-            $table->string('tempat_lahir');
-            $table->date('tanggal_lahir');
-            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
-            $table->string('agama');
-            $table->string('no_hp');
-            $table->string('email');
-            $table->string('sekolah_asal');
-            $table->year('tahun_lulus');
-            $table->string('nik_kk');
+            $table->string('nisn')->unique()->nullable();
+            $table->string('tempat_lahir')->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan'])->nullable();
+            $table->string('agama')->nullable();
+            $table->string('no_hp')->nullable();
+            $table->string('sekolah_asal')->nullable();
+            $table->year('tahun_lulus')->nullable();
+            $table->string('nik_kk')->nullable();
 
             $table->string('foto_3x4')->nullable();
             $table->string('upload_kk')->nullable();
 
-            $table->foreignId('jalur_pendaftaran_id');
+            $table->string('longitude')->nullable();
+            $table->string('latitude')->nullable();
+            $table->decimal('jarak_kesekolah', 12, 2)->nullable();
+
+            $table->foreignId('jalur_pendaftaran_id')->nullable();
+
+            $table->string('status')->default('tidak_lenkgap');
 
             // Orang tua
-            $table->string('nama_ayah');
-            $table->string('nama_ibu');
-            $table->string('pekerjaan_ayah');
-            $table->string('pekerjaan_ibu');
-            $table->decimal('penghasilan_ayah', 12, 2);
-            $table->decimal('penghasilan_ibu', 12, 2);
+            $table->string('nama_ayah')->nullable();
+            $table->string('nama_ibu')->nullable();
+            $table->string('pekerjaan_ayah')->nullable();
+            $table->string('pekerjaan_ibu')->nullable();
+            $table->decimal('penghasilan_ayah', 12, 2)->nullable();
+            $table->decimal('penghasilan_ibu', 12, 2)->nullable();
+
+            $table->integer('is_complete')->default(0);
             $table->timestamps();
         });
     }

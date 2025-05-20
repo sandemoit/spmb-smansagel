@@ -11,10 +11,35 @@
                 <div class="p-6 text-gray-900">
 
                     @if ($siswa && $isComplete)
-                        <p>👋 Hai, {{ $siswa->nama_siswa }}. Data kamu sudah lengkap!</p>
+                        <p>👋 Hai, {{ $siswa->nama_siswa }}. Data kamu sudah lengkap! Silahkan <span
+                                class="text-blue-600 underline">Download Lembaran
+                                Verifikasi</span> di bawah, lalu datang ke-sekolah
+                            untuk
+                            verifikasi data</p>
+                        <div class="flex gap-3">
+                            <p class="mt-4"><a href="{{ route('generate.lembarVerifikasi') }}"
+                                    class="bg-green-600 text-white px-4 py-2 rounded">Download Lembaran Verifikasi</a>
+                            <p class="mt-4"><a href="{{ asset('berkas/jadwal.pdf') }}" download="jadwal.pdf"
+                                    class="bg-blue-600 text-white px-4 py-2 rounded">Download
+                                    Jadwal</a></p>
+                            </p>
+                        </div>
                     @else
-                        <p class="text-red-500 font-bold">🚨 Data biodata Anda belum lengkap.</p>
-                        <a href="#" class="text-blue-600 underline">Lengkapi Biodata Sekarang</a>
+                        <p class="text-red-500 font-bold">🚨 Data kamu belum lengkap.</p>
+
+                        @if (!$biodataComplete && !$berkasComplete)
+                            <a href="{{ route('siswa.biodata') }}" class="text-blue-600 underline">Lengkapi Biodata
+                                Sekarang</a>
+                        @elseif (!$biodataComplete)
+                            <a href="{{ route('siswa.biodata') }}" class="text-blue-600 underline">Lengkapi Biodata
+                                Sekarang</a>
+                        @elseif (!$nilaiComplete)
+                            <a href="{{ route('siswa.nilai') }}" class="text-blue-600 underline">Lengkapi Nilai
+                                Sekarang</a>
+                        @elseif (!$berkasComplete)
+                            <a href="{{ route('siswa.berkas') }}" class="text-blue-600 underline">Lengkapi Berkas
+                                Sekarang</a>
+                        @endif
                     @endif
 
                 </div>

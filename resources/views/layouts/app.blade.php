@@ -31,9 +31,27 @@
 
         <!-- Page Content -->
         <main>
+            @if (session('success'))
+                <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 mt-4">
+                    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-200" role="alert">
+                        <span class="font-medium">Berhasil! </span> {{ session('success') }}
+                    </div>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 mt-4">
+                    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-200" role="alert">
+                        <span class="font-medium">Gagal! </span> {{ session('error') }}
+                    </div>
+                </div>
+            @endif
+
             {{ $slot }}
         </main>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
 </body>
 
 </html>
