@@ -165,7 +165,7 @@
             <td>8</td>
             <td>No HP/WA</td>
             <td>:</td>
-            <td>{{ $siswa->nomor_hp }}</td>
+            <td>{{ $siswa->no_hp }}</td>
         </tr>
         <tr>
             <td>9</td>

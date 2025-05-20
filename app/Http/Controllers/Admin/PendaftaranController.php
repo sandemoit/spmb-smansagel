@@ -15,7 +15,7 @@ class PendaftaranController extends Controller
 {
     public function index()
     {
-        $siswaList = Siswa::select(['id', 'nama_siswa', 'nisn', 'no_pendaftaran', 'status'])
+        $siswaList = Siswa::select(['id', 'nama_siswa', 'nisn', 'no_pendaftaran', 'status', 'no_pendaftaran'])
             ->orderBy('id', 'desc')
             ->get();
         return view('admin.pendaftaran', compact('siswaList'));
@@ -72,9 +72,12 @@ class PendaftaranController extends Controller
         return redirect()->back()->with('success', 'Status pendaftaran berhasil diperbarui');
     }
 
-    public function lembarVerifikasi($id)
+    public function lembarVerifikasi($no_pendaftaran)
     {
-        $siswa = Siswa::where('user_id', $id)->with(['user', 'jalur_pendaftaran'])->firstOrFail();
+        $siswa = Siswa::where('no_pendaftaran', $no_pendaftaran)
+            ->with(['user', 'jalur_pendaftaran'])
+            ->firstOrFail();
+
         $nilais = Nilai::where('siswa_id', $siswa->id)->orderBy('id')->get();
         $jalur = $siswa->jalur_pendaftaran->nama;
 

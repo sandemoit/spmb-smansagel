@@ -31,12 +31,16 @@
                                         Diterima
                                     @break
 
+                                    @case('pending')
+                                        Butuh diverifikasi
+                                    @break
+
                                     @case('ditolak')
                                         Ditolak
                                     @break
 
                                     @case('verifikasi')
-                                        Sedang diverifikasi
+                                        Sudah diverifikasi
                                     @break
 
                                     @case('tidak_lengkap')
@@ -50,7 +54,7 @@
                             <td>
                                 <a href="{{ route('pendaftaran.show', $siswa->id) }}"
                                     class="text-blue-600 hover:underline">Detail</a>
-                                <a href="{{ route('data.siswa.pdf', $siswa->id) }}"
+                                <a href="{{ route('data.siswa.pdf', $siswa->no_pendaftaran) }}"
                                     class="text-green-600 hover:underline">Cetak</a>
 
                                 <form action="{{ route('pendaftaran.destroy', $siswa->id) }}" method="POST"

@@ -1,5 +1,9 @@
 <x-guest-layout>
-    <div class="p-4">
+    <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 p-5">
+        <div class="text-center py-6">
+            <h2 class="text-2xl font-semibold text-gray-800">Selamat Datang</h2>
+            <p class="text-gray-600">Silahkan daftar untuk melanjutkan</p>
+        </div>
         <form method="POST" action="{{ route('register') }}">
             @csrf
 

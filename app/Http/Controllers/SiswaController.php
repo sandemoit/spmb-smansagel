@@ -191,6 +191,7 @@ class SiswaController extends Controller
             }
 
             $siswa->is_complete = $siswa->isComplete();
+            $siswa->status = $siswa->is_complete ? 'pending' : 'tidak_lengkap';
             $siswa->save();
 
             DB::commit();
