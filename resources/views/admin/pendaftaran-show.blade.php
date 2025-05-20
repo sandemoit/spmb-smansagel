@@ -56,16 +56,49 @@
                     <div><strong>Sekolah Asal:</strong> {{ $siswa->sekolah_asal }}</div>
                     <div><strong>Tahun Lulus:</strong> {{ $siswa->tahun_lulus }}</div>
                     <div><strong>Jalur Pendaftaran:</strong> {{ $siswa->jalur_pendaftaran->nama ?? '-' }}</div>
-                    <div><strong>Status:</strong> <span
-                            class="px-2 py-1 rounded-full bg-blue-100 text-blue-600 text-xs">{{ $siswa->status }}</span>
+                    <div><strong>Alamat Lengkap:</strong> {{ $siswa->alamat }}</div>
+                    <div><strong>Nama Ayah:</strong> {{ $siswa->nama_ayah }}</div>
+                    <div><strong>Pekerjaan Ayah:</strong> {{ $siswa->pekerjaan_ayah }}</div>
+                    <div><strong>Penghasilan Ayah:</strong> {{ number_format($siswa->penghasilan_ayah, 0, ',', '.') }}
+                    </div>
+                    <div><strong>Nama Ibu:</strong> {{ $siswa->nama_ibu }}</div>
+                    <div><strong>Pekerjaan Ibu:</strong> {{ ucwords(strtolower($siswa->pekerjaan_ibu)) }}</div>
+                    <div><strong>Penghasilan Ibu:</strong> {{ $siswa->penghasilan_ibu }}</div>
+                    <div><strong>Status:</strong>
+                        <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-600 text-xs">
+                            @switch($siswa->status)
+                                @case('diterima')
+                                    Diterima
+                                @break
+
+                                @case('pending')
+                                    Butuh diverifikasi
+                                @break
+
+                                @case('ditolak')
+                                    Ditolak
+                                @break
+
+                                @case('verifikasi')
+                                    Sudah diverifikasi
+                                @break
+
+                                @case('tidak_lengkap')
+                                    Belum lengkap
+                                @break
+
+                                @default
+                                    {{ $siswa->status }}
+                            @endswitch
+                        </span>
                     </div>
                 </div>
                 <div class="w-48 flex-shrink-0">
                     @if ($siswa->foto_3x4)
                         <img src="{{ asset($siswa->foto_3x4) }}" alt="Foto Siswa"
-                            class="w-full h-48 object-cover rounded-lg shadow">
+                            class="w-full h-64 object-cover rounded-lg shadow">
                     @else
-                        <div class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center">
+                        <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
                             <span class="text-gray-400">Tidak ada foto</span>
                         </div>
                     @endif

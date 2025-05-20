@@ -33,7 +33,7 @@ class CheckRole
         // Cek apakah request saat ini menuju ke path admin
         foreach ($adminOnlyPaths as $path) {
             if ($request->is($path)) {
-                abort(403, 'Unauthorized action.');
+                return redirect()->route('login');
             }
         }
 

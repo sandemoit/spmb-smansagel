@@ -2,13 +2,31 @@
     <div class="max-w-6xl mx-auto px-4 py-6">
         <h1 class="text-2xl font-bold text-gray-800 mb-6">📋 Daftar Siswa</h1>
 
-        <div class="bg-white p-4 shadow rounded-xl">
+        <!-- Filter Jalur Pendaftaran -->
+        <div class="bg-white p-4 shadow rounded-xl mb-6">
+            <h3 class="font-semibold text-gray-700 mb-3">Filter Berdasarkan Jalur Pendaftaran</h3>
+            <div class="flex flex-wrap gap-2">
+                <a href="{{ route('pendaftaran') }}"
+                    class="inline-block px-4 py-2 rounded-lg {{ request()->query('jalur') ? 'bg-gray-200 text-gray-800' : 'bg-blue-600 text-white' }} hover:bg-blue-700 hover:text-white transition duration-200">
+                    Semua
+                </a>
+                @foreach ($jalurList as $jalur)
+                    <a href="{{ route('pendaftaran', ['jalur' => $jalur->id]) }}"
+                        class="inline-block px-4 py-2 rounded-lg {{ request()->query('jalur') == $jalur->id ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800' }} hover:bg-blue-700 hover:text-white transition duration-200">
+                        {{ $jalur->nama }}
+                    </a>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="bg-white p-4 shadow rounded-xl overflow-x-auto">
             <table id="table-siswa" class="display w-full text-sm text-left">
                 <thead class="bg-gray-100 text-gray-700">
                     <tr>
                         <th>Nama</th>
                         <th>NISN</th>
                         <th>No Pendaftaran</th>
+                        <th>Jalur Pendaftaran</th>
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
@@ -19,6 +37,8 @@
                             <td>{{ $siswa->nama_siswa }}</td>
                             <td>{{ $siswa->nisn }}</td>
                             <td>{{ $siswa->no_pendaftaran }}</td>
+                            <td>{{ $siswa->jalur_pendaftaran ? $siswa->jalur_pendaftaran->nama : 'Tidak ada jalur' }}
+                            </td>
                             <td
                                 class="
                                 {{ $siswa->status == 'diterima' ? 'text-green-600' : '' }}

@@ -7,18 +7,34 @@ use App\Models\Siswa;
 use App\Models\Nilai;
 use App\Models\Berkas;
 use App\Models\BerkasPersyaratan;
+use App\Models\JalurPendaftaran;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use DataTables;
 
 class PendaftaranController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $siswaList = Siswa::select(['id', 'nama_siswa', 'nisn', 'no_pendaftaran', 'status', 'no_pendaftaran'])
-            ->orderBy('id', 'desc')
-            ->get();
-        return view('admin.pendaftaran', compact('siswaList'));
+        // Ambil semua jalur pendaftaran untuk filter
+        $jalurList = JalurPendaftaran::all();
+
+        // Query dasar
+        $query = Siswa::with('jalur_pendaftaran')
+            ->select(['id', 'nama_siswa', 'nisn', 'no_pendaftaran', 'status', 'jalur_pendaftaran_id', 'user_id'])
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'siswa');
+            });
+
+        // Filter berdasarkan jalur pendaftaran jika parameter ada
+        if ($request->has('jalur') && $request->jalur) {
+            $query->where('jalur_pendaftaran_id', $request->jalur);
+        }
+
+        // Dapatkan data siswa
+        $siswaList = $query->orderBy('id', 'desc')->get();
+
+        return view('admin.pendaftaran', compact('siswaList', 'jalurList'));
     }
 
     public function show($id)

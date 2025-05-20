@@ -159,26 +159,17 @@ class SiswaController extends Controller
         $siswa = Siswa::where('user_id', $user->id)->firstOrFail();
 
         $request->validate([
-            'berkas.*' => 'file|mimes:pdf|max:2048', // Only PDF files, max 2MB
+            'berkas.*' => 'file|mimes:jpg,jpeg,pdf,pdf|max:2048', // Only PDF files, max 2MB
         ]);
-
-        // Path ke folder berkas di public_html
-        $publicRoot = base_path('../spmb.smanegeri1gelumbang.sch.id'); // Ganti 'username' sesuai nama user cPanel kamu
-        $berkasPath = $publicRoot . '/berkas';
 
         try {
             DB::beginTransaction();
 
-            if (!File::exists($berkasPath)) {
-                File::makeDirectory($berkasPath, 0755, true);
-            }
-
             foreach ($request->file('berkas', []) as $berkasPersyaratanId => $file) {
                 if ($file) {
-                    // Tambahkan ID atau timestamp biar nama file unik
-                    $fileName = Str::slug($siswa->nama_siswa, '_') . '_' . $berkasPersyaratanId . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $file->move($berkasPath, $fileName);
-                    $path = "berkas/$fileName";
+                    $filaName = Str::slug($siswa->nama_siswa, '_')  . '.' . $file->getClientOriginalExtension();
+                    $file->move(public_path('berkas'), $filaName);
+                    $path = "berkas/$filaName";
 
                     Berkas::updateOrCreate(
                         [

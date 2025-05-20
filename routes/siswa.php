@@ -1,9 +1,13 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('siswa')->group(function () {
+Route::middleware(CheckRole::class)->prefix('siswa')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
     // Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
     Route::get('/biodata', [SiswaController::class, 'biodata'])->name('siswa.biodata');
     Route::put('/biodata', [SiswaController::class, 'biodataUpdate'])->name('siswa.biodata.update');
