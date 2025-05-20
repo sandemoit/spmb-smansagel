@@ -65,9 +65,9 @@
                                         {{ $m }} semester {{ $i }}
                                     </label>
                                     <input type="number" name="nilai[{{ $m }} semester {{ $i }}]"
+                                        value="{{ old('nilai.' . $m . ' semester ' . $i, $nilaiTersimpan[$m . ' semester ' . $i] ?? '') }}"
                                         required
-                                        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
-                                        value="{{ old() }}" />
+                                        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full" />
                                 </div>
                             @endfor
                         @endforeach

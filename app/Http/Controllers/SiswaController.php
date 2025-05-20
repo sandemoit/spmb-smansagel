@@ -89,7 +89,12 @@ class SiswaController extends Controller
 
     public function nilai()
     {
-        return view('page.pendaftaran.nilai');
+        $siswaId = Auth::user()->id; // atau pakai request()->siswa_id jika by URL param
+
+        // Ambil semua nilai siswa dalam bentuk key => value
+        $nilaiTersimpan = Nilai::where('siswa_id', $siswaId)->pluck('nilai', 'nama')->toArray();
+
+        return view('page.pendaftaran.nilai', compact('nilaiTersimpan', 'siswaId'));
     }
 
     public function nilaiStore(Request $request)
