@@ -186,12 +186,6 @@
             <td colspan="2">{{ $siswa->tahun_lulus }}</td>
         </tr>
         <tr>
-            <td>12</td>
-            <td>Alamat rumah</td>
-            <td>:</td>
-            <td colspan="2">{{ $siswa->alamat_rumah ?? 'DESA KARANG ENDAH RT.011 RW.05' }}</td>
-        </tr>
-        <tr>
             <td>13</td>
             <td>Jalur Pendaftaran</td>
             <td>:</td>

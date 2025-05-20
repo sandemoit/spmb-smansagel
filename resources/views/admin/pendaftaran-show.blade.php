@@ -61,8 +61,8 @@
                     </div>
                 </div>
                 <div class="w-48 flex-shrink-0">
-                    @if ($siswa->foto)
-                        <img src="{{ asset($siswa->foto) }}" alt="Foto Siswa"
+                    @if ($siswa->foto_3x4)
+                        <img src="{{ asset($siswa->foto_3x4) }}" alt="Foto Siswa"
                             class="w-full h-48 object-cover rounded-lg shadow">
                     @else
                         <div class="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center">

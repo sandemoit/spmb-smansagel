@@ -7,6 +7,7 @@ use App\Models\Siswa;
 use App\Models\Nilai;
 use App\Models\Berkas;
 use App\Models\BerkasPersyaratan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use DataTables;
 
@@ -69,5 +70,17 @@ class PendaftaranController extends Controller
         $siswa->save();
 
         return redirect()->back()->with('success', 'Status pendaftaran berhasil diperbarui');
+    }
+
+    public function lembarVerifikasi($id)
+    {
+        $siswa = Siswa::where('user_id', $id)->with(['user', 'jalur_pendaftaran'])->firstOrFail();
+        $nilais = Nilai::where('siswa_id', $siswa->id)->orderBy('id')->get();
+        $jalur = $siswa->jalur_pendaftaran->nama;
+
+        $pdf = Pdf::loadView('page.pendaftaran.lembar-verifikasi', compact('siswa', 'nilais', 'jalur'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('lembar_verifikasi_' . $siswa->nama_siswa . '.pdf');
     }
 }

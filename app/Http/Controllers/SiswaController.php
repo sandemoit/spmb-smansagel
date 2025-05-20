@@ -203,7 +203,6 @@ class SiswaController extends Controller
         }
     }
 
-
     public function lembarVerifikasi()
     {
         $user = Auth::user();

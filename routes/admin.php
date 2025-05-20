@@ -10,4 +10,6 @@ Route::prefix('admin')->group(function () {
   Route::get('/pendaftaran/{id}', [PendaftaranController::class, 'show'])->name('pendaftaran.show');
   Route::delete('/pendaftaran/{id}', [PendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
   Route::put('/updateStatus/{id}', [PendaftaranController::class, 'updateStatus'])->name('admin.updateStatus');
+
+  Route::get('/pendaftaran/cetak/{id}', [PendaftaranController::class, 'lembarVerifikasi'])->name('data.siswa.pdf');
 });

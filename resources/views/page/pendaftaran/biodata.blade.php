@@ -129,6 +129,9 @@
                             <label>Latitude</label>
                             <input type="text" name="latitude" value="{{ old('latitude', $siswa->latitude) }}"
                                 class="w-full border rounded p-2" placeholder="Contoh: -2.9630674216609267" required>
+                            <span class="text-blue-500 underline"><a
+                                    href="https://www.youtube.com/watch?v=Xha1RTiZ5zQ">Lihat tutorial nya disini jika
+                                    belum paham</a></span>
                             <x-input-error :messages="$errors->get('latitude')" class="mt-2" />
                         </div>
 
@@ -136,6 +139,9 @@
                             <label>Longitude</label>
                             <input type="text" name="longitude" value="{{ old('longitude', $siswa->longitude) }}"
                                 class="w-full border rounded p-2" placeholder="Contoh: 104.8078575551942" required>
+                            <span class="text-blue-500 underline"><a
+                                    href="https://www.youtube.com/watch?v=Xha1RTiZ5zQ">Lihat tutorial nya disini jika
+                                    belum paham</a></span>
                             <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
                         </div>
 

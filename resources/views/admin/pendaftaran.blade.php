@@ -50,6 +50,8 @@
                             <td>
                                 <a href="{{ route('pendaftaran.show', $siswa->id) }}"
                                     class="text-blue-600 hover:underline">Detail</a>
+                                <a href="{{ route('data.siswa.pdf', $siswa->id) }}"
+                                    class="text-green-600 hover:underline">Cetak</a>
 
                                 <form action="{{ route('pendaftaran.destroy', $siswa->id) }}" method="POST"
                                     onsubmit="return confirm('Yakin ingin menghapus data?')">
