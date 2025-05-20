@@ -18,7 +18,11 @@
                             verifikasi data</p>
                         <div class="flex gap-3">
                             <p class="mt-4"><a href="{{ route('generate.lembarVerifikasi') }}"
-                                    class="bg-green-600 text-white px-4 py-2 rounded">Download Lembaran Verifikasi</a>
+                                    class="bg-green-600 text-white px-4 py-2 rounded">Download Data Kamu</a>
+                            <p class="mt-4"><a href="{{ asset('berkas/lembar_verifikasi.pdf') }}"
+                                    download="lembar_verifikasi.pdf"
+                                    class="bg-orange-600 text-white px-4 py-2 rounded">Download
+                                    Lembar Verifikasi</a></p>
                             <p class="mt-4"><a href="{{ asset('berkas/jadwal.pdf') }}" download="jadwal.pdf"
                                     class="bg-blue-600 text-white px-4 py-2 rounded">Download
                                     Jadwal</a></p>

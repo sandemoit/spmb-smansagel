@@ -37,7 +37,8 @@ class Siswa extends Model
         'status',
         'no_pendaftaran',
         'user_id',
-        'is_complete'
+        'is_complete',
+        'alamat'
     ];
 
     // Jika siswa terhubung dengan user

@@ -53,6 +53,7 @@ class SiswaController extends Controller
             'upload_kk' => 'nullable|file|mimes:pdf|max:2048',
             'foto_3x4' => 'nullable|file|mimes:jpg,jpeg,png|max:1024',
             'jarak_kesekolah' => 'required|numeric',
+            'alamat' => 'required|string',
         ]);
 
         try {

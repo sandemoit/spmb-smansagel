@@ -267,8 +267,8 @@
             <td style="height: 80px;" class="no-border"></td>
         </tr>
         <tr>
-            <td class="text-center no-border">Pandu Wiranata, S.Pd</td>
-            <td class="text-center no-border">Aryadi, S.Pd</td>
+            <td class="text-center no-border">________________</td>
+            <td class="text-center no-border">________________</td>
         </tr>
     </table>
 

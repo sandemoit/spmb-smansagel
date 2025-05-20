@@ -70,8 +70,7 @@
                             @if ($berkasUploaded->has($berkas->id))
                                 <p class="text-green-600 text-sm">
                                     Sudah diupload:
-                                    <a href="{{ asset('storage/' . $berkasUploaded[$berkas->id]->file_path) }}"
-                                        target="_blank" class="underline">
+                                    <a href="{{ asset($berkasUploaded->file_path) }}" target="_blank" class="underline">
                                         Lihat File
                                     </a>
                                 </p>
@@ -79,6 +78,7 @@
 
                             <input type="file" name="berkas[{{ $berkas->id }}]" class="mt-1 block w-full"
                                 {{ $berkas->is_required ? 'required' : '' }}>
+                            <span class="text-xs text-red-500">* File harus berformat PDF dan MAX. 2MB</span>
                         </div>
                     @endforeach
 

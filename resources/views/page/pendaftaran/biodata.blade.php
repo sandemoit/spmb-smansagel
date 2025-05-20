@@ -185,6 +185,13 @@
                         </div>
                     </div>
 
+                    <div class="mt-6">
+                        <label>Alamat Lengkap</label>
+                        <textarea name="alamat" rows="4" class="w-full border rounded p-2" required>{{ old('alamat', $siswa->alamat) }}</textarea>
+                        <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
+
+                    </div>
+
                     <h2 class="text-xl font-semibold mt-4">Biodata Orang Tua</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
