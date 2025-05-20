@@ -13,7 +13,7 @@
                     @if ($siswa && $isComplete)
                         <p>👋 Hai, {{ $siswa->nama_siswa }}. Data kamu sudah lengkap! Silahkan <span
                                 class="text-blue-600 underline">Download Lembaran
-                                Verifikasi</span> di bawah, lalu datang ke-sekolah
+                                Verifikasi dan Data Kamu</span> di bawah, lalu datang ke-sekolah
                             untuk
                             verifikasi data</p>
                         <div class="flex gap-3">
@@ -23,9 +23,6 @@
                                     download="lembar_verifikasi.pdf"
                                     class="bg-orange-600 text-white px-4 py-2 rounded">Download
                                     Lembar Verifikasi</a></p>
-                            <p class="mt-4"><a href="{{ asset('berkas/jadwal.pdf') }}" download="jadwal.pdf"
-                                    class="bg-blue-600 text-white px-4 py-2 rounded">Download
-                                    Jadwal</a></p>
                             </p>
                         </div>
                     @else

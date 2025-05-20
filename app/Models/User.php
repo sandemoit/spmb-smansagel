@@ -50,4 +50,28 @@ class User extends Authenticatable
     {
         return $this->hasOne(Siswa::class, 'user_id');
     }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    /**
+     * Check if user is admin
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+    /**
+     * Check if user is buyer
+     *
+     * @return bool
+     */
+    public function isSiswa(): bool
+    {
+        return $this->hasRole('siswa');
+    }
 }

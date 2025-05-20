@@ -97,7 +97,7 @@ class Siswa extends Model
         $isCompleteNow = $this->isComplete();
         if ($this->is_complete != $isCompleteNow) {
             $this->is_complete = $isCompleteNow;
-            $this->status = 'verifikasi';
+            $this->status = 'pending';
             $this->save();
         }
 

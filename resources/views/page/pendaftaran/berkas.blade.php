@@ -70,7 +70,7 @@
                             @if ($berkasUploaded->has($berkas->id))
                                 <p class="text-green-600 text-sm">
                                     Sudah diupload:
-                                    <a href="{{ asset($berkasUploaded->file_path) }}" target="_blank" class="underline">
+                                    <a href="#" target="_blank" class="underline">
                                         Lihat File
                                     </a>
                                 </p>

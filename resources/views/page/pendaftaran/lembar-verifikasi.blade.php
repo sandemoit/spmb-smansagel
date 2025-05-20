@@ -199,12 +199,18 @@
         </tr>
         <tr>
             <td>14</td>
+            <td>Alamat Lengkap</td>
+            <td>:</td>
+            <td colspan="2">{{ $siswa->alamat }}</td>
+        </tr>
+        <tr>
+            <td>15</td>
             <td>Jarak Dari Rumah Ke Sekolah</td>
             <td>:</td>
             <td colspan="2">{{ $siswa->jarak_kesekolah }}</td>
         </tr>
         <tr>
-            <td>15</td>
+            <td>16</td>
             <td>Lokasi Rumah</td>
             <td>:</td>
             <td colspan="2">{{ $siswa->longitude }}, {{ $siswa->latitude }}</td>

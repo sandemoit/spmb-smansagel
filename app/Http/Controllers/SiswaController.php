@@ -11,6 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -50,8 +51,8 @@ class SiswaController extends Controller
             'jalur_pendaftaran_id' => 'required|exists:jalur_pendaftaran,id',
             'latitude' => 'required|string',
             'longitude' => 'required|string',
-            'upload_kk' => 'nullable|file|mimes:pdf|max:2048',
-            'foto_3x4' => 'nullable|file|mimes:jpg,jpeg,png|max:1024',
+            'upload_kk' => 'nullable|file|mimes:jpg,jpeg,png',
+            'foto_3x4' => 'nullable|file|mimes:jpg,jpeg,png',
             'jarak_kesekolah' => 'required|numeric',
             'alamat' => 'required|string',
         ]);
@@ -65,6 +66,8 @@ class SiswaController extends Controller
                 $fileName = Str::slug($validated['nama_siswa'], '_') . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('kk'), $fileName);
                 $validated['upload_kk'] = "kk/$fileName";
+            } else {
+                $validated['upload_kk'] = 'Tidak wajib';
             }
 
             if ($request->hasFile('foto_3x4')) {
@@ -72,6 +75,8 @@ class SiswaController extends Controller
                 $fileName = Str::slug($validated['nama_siswa'], '_') . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('foto'), $fileName);
                 $validated['foto_3x4'] = "foto/$fileName";
+            } else {
+                $validated['foto_3x4'] = 'Tidak wajib';
             }
 
             $siswa->update($validated);
@@ -157,14 +162,23 @@ class SiswaController extends Controller
             'berkas.*' => 'file|mimes:pdf|max:2048', // Only PDF files, max 2MB
         ]);
 
+        // Path ke folder berkas di public_html
+        $publicRoot = base_path('../spmb.smanegeri1gelumbang.sch.id'); // Ganti 'username' sesuai nama user cPanel kamu
+        $berkasPath = $publicRoot . '/berkas';
+
         try {
             DB::beginTransaction();
 
+            if (!File::exists($berkasPath)) {
+                File::makeDirectory($berkasPath, 0755, true);
+            }
+
             foreach ($request->file('berkas', []) as $berkasPersyaratanId => $file) {
                 if ($file) {
-                    $filaName = Str::slug($siswa->nama_siswa, '_')  . '.' . $file->getClientOriginalExtension();
-                    $file->move(public_path('berkas'), $filaName);
-                    $path = "berkas/$filaName";
+                    // Tambahkan ID atau timestamp biar nama file unik
+                    $fileName = Str::slug($siswa->nama_siswa, '_') . '_' . $berkasPersyaratanId . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $file->move($berkasPath, $fileName);
+                    $path = "berkas/$fileName";
 
                     Berkas::updateOrCreate(
                         [
@@ -176,7 +190,6 @@ class SiswaController extends Controller
                 }
             }
 
-            // Update status kelengkapan
             $siswa->is_complete = $siswa->isComplete();
             $siswa->save();
 
@@ -189,6 +202,7 @@ class SiswaController extends Controller
             return back()->with('error', 'Terjadi kesalahan saat mengupload berkas.');
         }
     }
+
 
     public function lembarVerifikasi()
     {

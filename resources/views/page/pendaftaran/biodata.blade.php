@@ -151,7 +151,7 @@
                             <label>Photo (3 x 4) </label>
                             <input type="file" name="foto_3x4" value="{{ old('foto_3x4', $siswa->foto_3x4) }}"
                                 class="w-full border rounded p-2">
-                            <span class="text-red-500 text-sm block">* Max. 2MB PNG/JPEG</span>
+                            <span class="text-red-500 text-sm block">* Format JPEG, PNG, JPG, PDF</span>
                             <x-input-error :messages="$errors->get('foto_3x4')" class="mt-2" />
                         </div>
 
@@ -159,8 +159,8 @@
                             <label>KK (Kartu Keluarga)</label>
                             <input type="file" name="upload_kk" value="{{ old('upload_kk', $siswa->upload_kk) }}"
                                 class="w-full border rounded p-2">
-                            <span class="text-red-500 text-sm block">* KK harus dilegalisir kelurahan | Max. 2MB
-                                PDF</span>
+                            <span class="text-red-500 text-sm block">* KK harus dilegalisir kelurahan | Format JPEG,
+                                PNG, JPG, PDF</span>
                             <x-input-error :messages="$errors->get('upload_kk')" class="mt-2" />
                         </div>
 
@@ -211,7 +211,7 @@
 
                         <div>
                             <label>Penghasilan Ayah</label>
-                            <input type="text" name="penghasilan_ayah"
+                            <input type="number" name="penghasilan_ayah"
                                 value="{{ old('penghasilan_ayah', $siswa->penghasilan_ayah) }}"
                                 class="w-full border rounded p-2" required>
                             <x-input-error :messages="$errors->get('penghasilan_ayah')" class="mt-2" />
@@ -234,7 +234,7 @@
 
                         <div>
                             <label>Penghasilan Ibu</label>
-                            <input type="text" name="penghasilan_ibu"
+                            <input type="number" name="penghasilan_ibu"
                                 value="{{ old('penghasilan_ibu', $siswa->penghasilan_ibu) }}"
                                 class="w-full border rounded p-2" required>
                             <x-input-error :messages="$errors->get('penghasilan_ibu')" class="mt-2" />

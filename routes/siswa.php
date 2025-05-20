@@ -3,7 +3,7 @@
 use App\Http\Controllers\SiswaController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('siswa')->middleware('auth')->group(function () {
+Route::prefix('siswa')->group(function () {
     // Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
     Route::get('/biodata', [SiswaController::class, 'biodata'])->name('siswa.biodata');
     Route::put('/biodata', [SiswaController::class, 'biodataUpdate'])->name('siswa.biodata.update');
