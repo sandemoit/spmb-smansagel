@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('no_hp')->nullable();
             $table->string('sekolah_asal')->nullable();
             $table->year('tahun_lulus')->nullable();
-            $table->string('nik_kk')->nullable();
+            $table->string('nik')->nullable();
 
             $table->string('foto_3x4')->nullable();
             $table->string('upload_kk')->nullable();
@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('longitude')->nullable();
             $table->string('latitude')->nullable();
             $table->decimal('jarak_kesekolah', 12, 2)->nullable();
+            $table->tinyText('alamat')->nullable();
 
             $table->foreignId('jalur_pendaftaran_id')->nullable();
 
