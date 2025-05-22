@@ -23,9 +23,16 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 WORKDIR /var/www/html
 COPY . .
 
-# Install dependencies
+# Install PHP dependencies
 RUN composer install --optimize-autoloader --no-dev
+
+# Install Node.js dependencies and build assets
+RUN npm install && npm run build
+
+# Run database migrations and seeders
+RUN php artisan migrate --seed
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage
 RUN chown -R www-data:www-data /var/www/html/bootstrap/cache
+
