@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:9000" # PHP-FPM port
+    volumes:
+      - .:/var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_DATABASE=laravel
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=laravel
+      - MYSQL_ROOT_PASSWORD=secret
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306" # Expose MySQL port (opsional)
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+
+volumes:
+  mysql_data:
