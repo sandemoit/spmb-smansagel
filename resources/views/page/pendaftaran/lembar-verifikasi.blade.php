@@ -91,7 +91,7 @@
         <table style="border: none; width: 100%;">
             <tr style="border: none;">
                 <td style="width: 15%; border: none; text-align: center; vertical-align: top;">
-                    <img src="{{ asset('logo_sumsel.png') }}" width="80" alt="Logo Sumsel">
+                    <img src="{{ public_path('logo_sumsel.png') }}" width="80" alt="Logo Sumsel">
                 </td>
                 <td style="width: 70%; border: none; text-align: center; vertical-align: middle;">
                     <h2 style="margin-bottom: 5px;">PEMERINTAH PROVINSI SUMATERA SELATAN</h2>
@@ -102,7 +102,7 @@
                         smanegerisatugelumbang@ymail.com</p>
                 </td>
                 <td style="width: 15%; border: none; text-align: center; vertical-align: top;">
-                    <img src="{{ asset('logo.png') }}" width="80" alt="Logo Sekolah">
+                    <img src="{{ public_path('logo.png') }}" width="80" alt="Logo Sekolah">
                 </td>
             </tr>
         </table>
@@ -122,7 +122,7 @@
             <td width="10">:</td>
             <td>{{ $siswa->no_pendaftaran ?? '' }}</td>
             <td rowspan="10" class="foto-container">
-                <img src="{{ asset($siswa->foto_3x4) }}" alt="Foto Siswa" class="foto-siswa">
+                <img src="{{ public_path($siswa->foto_3x4) }}" alt="Foto Siswa" class="foto-siswa">
             </td>
         </tr>
         <tr>

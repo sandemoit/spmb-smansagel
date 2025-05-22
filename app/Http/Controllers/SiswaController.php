@@ -181,9 +181,9 @@ class SiswaController extends Controller
 
             foreach ($request->file('berkas', []) as $berkasPersyaratanId => $file) {
                 if ($file) {
-                    $filaName = Str::slug($siswa->nama_siswa, '_')  . '.' . $file->getClientOriginalExtension();
-                    $file->move(public_path('berkas'), $filaName);
-                    $path = "berkas/$filaName";
+                    $fileName = Str::slug($siswa->nama_siswa, '_')  . '.' . $file->getClientOriginalExtension();
+                    $file->move(public_path('berkas'), $fileName);
+                    $path = "berkas/$fileName";
 
                     Berkas::updateOrCreate(
                         [
