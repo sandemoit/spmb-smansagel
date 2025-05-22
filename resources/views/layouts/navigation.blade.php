@@ -22,12 +22,27 @@
                             {{ __('Pendaftaran') }}
                         </x-nav-link>
                     </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('export')" :active="request()->routeIs('export')">
+                            {{ __('Export') }}
+                        </x-nav-link>
+                    </div>
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('filtering')" :active="request()->routeIs('filtering')">
+                            {{ __('Filtering') }}
+                        </x-nav-link>
+                    </div>
                 @else
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
                     </div>
+                    {{-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('siswa.pengumuman')" :active="request()->routeIs('siswa.pengumuman')">
+                            {{ __('Pengumuman') }}
+                        </x-nav-link>
+                    </div> --}}
                 @endif
             </div>
 

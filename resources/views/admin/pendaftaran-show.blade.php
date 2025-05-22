@@ -1,99 +1,121 @@
 <x-app-layout>
-    <div class="max-w-5xl mx-auto p-6 space-y-8">
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Detail Siswa
+        </h2>
+    </x-slot>
 
-        {{-- Title --}}
-        <div class="border-b pb-4">
-            <h2 class="text-2xl font-bold text-gray-800">Detail Siswa</h2>
-            <p class="text-gray-500">Informasi lengkap pendaftaran</p>
-        </div>
+    <div class="max-w-7xl mx-auto p-6 space-y-8">
 
         {{-- Button Verifikasi --}}
-        <div class="flex justify-end">
-            <div x-data="{ warning: false }">
-                <button @click="warning = true"
-                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                    Verifikasi
-                </button>
+        @if ($siswa->status == 'pending')
+            <div class="flex justify-start">
+                <div x-data="{ warning: false }">
+                    <button @click="warning = true"
+                        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                        Verifikasi
+                    </button>
 
-                <div x-show="warning" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mt-4"
-                    role="alert">
-                    <p class="font-bold">Peringatan</p>
-                    <p>Anda akan mengubah status pendaftaran menjadi "Sedang diverifikasi". Pastikan Anda telah
-                        memeriksa
-                        data
-                        siswa
-                        dengan
-                        benar.</p>
-                    <form action="{{ route('admin.updateStatus', $siswa->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <input type="hidden" name="status" value="verifikasi">
-                        <button type="submit"
-                            class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                            Ya, saya yakin
-                        </button>
-                        <button type="button" @click="warning = false"
-                            class="focus:outline-none text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                            Batal
-                        </button>
-                    </form>
+                    <div x-show="warning" class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mt-4"
+                        role="alert">
+                        <p class="font-bold">Peringatan</p>
+                        <p>Anda akan mengubah status pendaftaran menjadi "Butuh diverifikasi". Pastikan Anda telah
+                            memeriksa
+                            data
+                            siswa
+                            dengan
+                            benar.</p>
+                        <form action="{{ route('admin.updateStatus', $siswa->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" name="status" value="verifikasi">
+                            <button type="submit"
+                                class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                Ya, saya yakin
+                            </button>
+                            <button type="button" @click="warning = false"
+                                class="focus:outline-none text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                                Batal
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
 
         {{-- BIODATA --}}
-        <div class="bg-white shadow-md rounded-xl p-6 space-y-4">
+        <div class="bg-white shadow-md rounded-xl p-6">
             <h3 class="text-lg font-semibold text-gray-700">🧑‍🎓 Biodata</h3>
-            <div class="flex gap-6">
-                <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-                    <div><strong>No Pendaftaran:</strong> {{ $siswa->no_pendaftaran }}</div>
-                    <div><strong>Nama:</strong> {{ $siswa->nama_siswa }}</div>
-                    <div><strong>NISN:</strong> {{ $siswa->nisn }}</div>
-                    <div><strong>TTL:</strong> {{ $siswa->tempat_lahir }}, {{ $siswa->tanggal_lahir }}</div>
-                    <div><strong>Jenis Kelamin:</strong> {{ $siswa->jenis_kelamin }}</div>
-                    <div><strong>Agama:</strong> {{ $siswa->agama }}</div>
-                    <div><strong>No HP:</strong> {{ $siswa->no_hp }}</div>
-                    <div><strong>Sekolah Asal:</strong> {{ $siswa->sekolah_asal }}</div>
-                    <div><strong>Tahun Lulus:</strong> {{ $siswa->tahun_lulus }}</div>
-                    <div><strong>Jalur Pendaftaran:</strong> {{ $siswa->jalur_pendaftaran->nama ?? '-' }}</div>
-                    <div><strong>Alamat Lengkap:</strong> {{ $siswa->alamat }}</div>
-                    <div><strong>Nama Ayah:</strong> {{ $siswa->nama_ayah }}</div>
-                    <div><strong>Pekerjaan Ayah:</strong> {{ $siswa->pekerjaan_ayah }}</div>
-                    <div><strong>Penghasilan Ayah:</strong> {{ number_format($siswa->penghasilan_ayah, 0, ',', '.') }}
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="flex-1 grid grid-cols-1 gap-4 text-sm text-gray-600">
+                    <div class="md:grid md:grid-cols-2">
+                        <div><strong>No Pendaftaran:</strong> {{ $siswa->no_pendaftaran }}</div>
+                        <div><strong>Nama:</strong> {{ $siswa->nama_siswa }}</div>
                     </div>
-                    <div><strong>Nama Ibu:</strong> {{ $siswa->nama_ibu }}</div>
-                    <div><strong>Pekerjaan Ibu:</strong> {{ ucwords(strtolower($siswa->pekerjaan_ibu)) }}</div>
-                    <div><strong>Penghasilan Ibu:</strong> {{ $siswa->penghasilan_ibu }}</div>
-                    <div><strong>Status:</strong>
-                        <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-600 text-xs">
-                            @switch($siswa->status)
-                                @case('diterima')
-                                    Diterima
-                                @break
+                    <div class="md:grid md:grid-cols-2">
+                        <div><strong>NISN:</strong> {{ $siswa->nisn }}</div>
+                        <div><strong>TTL:</strong> {{ $siswa->tempat_lahir }}, {{ $siswa->tanggal_lahir }}</div>
+                    </div>
+                    <div class="md:grid md:grid-cols-2">
+                        <div><strong>Jenis Kelamin:</strong> {{ $siswa->jenis_kelamin }}</div>
+                        <div><strong>Agama:</strong> {{ $siswa->agama }}</div>
+                    </div>
+                    <div class="md:grid md:grid-cols-2">
+                        <div><strong>No HP:</strong> {{ $siswa->no_hp }}</div>
+                        <div><strong>Sekolah Asal:</strong> {{ $siswa->sekolah_asal }}</div>
+                    </div>
+                    <div class="md:grid md:grid-cols-2">
+                        <div><strong>Tahun Lulus:</strong> {{ $siswa->tahun_lulus }}</div>
+                        <div><strong>Jalur Pendaftaran:</strong> {{ $siswa->jalur_pendaftaran->nama ?? '-' }}</div>
+                    </div>
+                    <div class="md:grid md:grid-cols-2">
+                        <div><strong>Alamat Lengkap:</strong> {{ $siswa->alamat }}</div>
+                    </div>
+                    <div class="md:grid md:grid-cols-2">
+                        <div><strong>Nama Ayah:</strong> {{ $siswa->nama_ayah }}</div>
+                        <div><strong>Pekerjaan Ayah:</strong> {{ $siswa->pekerjaan_ayah }}</div>
+                    </div>
+                    <div class="md:grid md:grid-cols-2">
+                        <div><strong>Penghasilan Ayah:</strong>
+                            {{ number_format($siswa->penghasilan_ayah, 0, ',', '.') }}</div>
+                        <div><strong>Nama Ibu:</strong> {{ $siswa->nama_ibu }}</div>
+                    </div>
+                    <div class="md:grid md:grid-cols-2">
+                        <div><strong>Pekerjaan Ibu:</strong> {{ ucwords(strtolower($siswa->pekerjaan_ibu)) }}</div>
+                        <div><strong>Penghasilan Ibu:</strong> {{ $siswa->penghasilan_ibu }}</div>
+                    </div>
+                    <div class="md:grid md:grid-cols-2">
+                        <div><strong>Status:</strong>
+                            <span class="px-2 py-1 rounded-full bg-blue-100 text-blue-600 text-xs">
+                                @switch($siswa->status)
+                                    @case('diterima')
+                                        Diterima
+                                    @break
 
-                                @case('pending')
-                                    Butuh diverifikasi
-                                @break
+                                    @case('pending')
+                                        Butuh diverifikasi
+                                    @break
 
-                                @case('ditolak')
-                                    Ditolak
-                                @break
+                                    @case('tidak_lolos')
+                                        Ditolak
+                                    @break
 
-                                @case('verifikasi')
-                                    Sudah diverifikasi
-                                @break
+                                    @case('verifikasi')
+                                        Sudah diverifikasi
+                                    @break
 
-                                @case('tidak_lengkap')
-                                    Belum lengkap
-                                @break
+                                    @case('tidak_lengkap')
+                                        Belum lengkap
+                                    @break
 
-                                @default
-                                    {{ $siswa->status }}
-                            @endswitch
-                        </span>
+                                    @default
+                                        {{ $siswa->status }}
+                                @endswitch
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div class="w-48 flex-shrink-0">
+                <div class="w-full md:w-48 flex-shrink-0">
                     @if ($siswa->foto_3x4)
                         <img src="{{ asset($siswa->foto_3x4) }}" alt="Foto Siswa"
                             class="w-full h-64 object-cover rounded-lg shadow">

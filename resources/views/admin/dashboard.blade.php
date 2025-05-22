@@ -85,6 +85,31 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Statistik Jalur Pendaftaran -->
+            <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center md:text-left">Statistik Jalur Pendaftaran
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                @foreach ($jalurPendaftaran as $jalur)
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6 bg-white border-b border-gray-200">
+                            <div class="flex items-center">
+                                <div class="p-3 rounded-full bg-blue-500 text-white mr-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="text-gray-500 text-sm">{{ $jalur->nama }}</div>
+                                    <div class="text-3xl font-bold">{{ $jalur->total }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 </x-app-layout>

@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 py-8 px-4">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-8 px-4">
         <ol
             class="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
             <li
@@ -44,7 +44,7 @@
     </div>
 
     <div class="">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-sm rounded-lg p-6">
                 <form action="{{ route('siswa.biodata.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf

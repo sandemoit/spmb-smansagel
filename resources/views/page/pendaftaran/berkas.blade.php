@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 py-8">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-8">
         <ol
             class="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
             <li
@@ -52,7 +52,7 @@
     </div>
 
     <div class="">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow-sm rounded-lg p-6">
                 <h2 class="text-2xl text-center mb-2">Jalur Pendaftaran: {{ $siswa->jalur_pendaftaran->nama }}</h2>
                 <form action="{{ route('siswa.berkas.upload') }}" method="POST" enctype="multipart/form-data">
@@ -76,15 +76,28 @@
                                 </p>
                             @endif
 
-                            <input type="file" name="berkas[{{ $berkas->id }}]" class="mt-1 block w-full"
+                            <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="checkFileSize(this)"
+                                name="berkas[{{ $berkas->id }}]" class="mt-1 block w-full"
                                 {{ $berkas->is_required ? 'required' : '' }}>
                             <span class="text-xs text-red-500">* File harus berformat PDF dan MAX. 2MB</span>
                         </div>
                     @endforeach
 
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Upload</button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Upload dan Submit</button>
                 </form>
             </div>
         </div>
     </div>
+
+    @push('custom-js')
+        <script>
+            function checkFileSize(input) {
+                const file = input.files[0];
+                if (file.size > 2 * 1024 * 1024) { // 2MB
+                    alert("Ukuran file terlalu besar (maks 2MB)");
+                    input.value = "";
+                }
+            }
+        </script>
+    @endpush
 </x-app-layout>

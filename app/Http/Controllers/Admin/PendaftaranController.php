@@ -78,7 +78,7 @@ class PendaftaranController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:diterima,ditolak,verifikasi,tidak_lengkap'
+            'status' => 'required|in:diterima,tidak_lolos,verifikasi,tidak_lengkap'
         ]);
 
         $siswa = Siswa::findOrFail($id);

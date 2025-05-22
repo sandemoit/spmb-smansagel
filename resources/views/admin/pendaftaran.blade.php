@@ -1,6 +1,10 @@
 <x-app-layout>
-    <div class="max-w-6xl mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold text-gray-800 mb-6">📋 Daftar Siswa</h1>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            📋 Daftar Siswa
+        </h2>
+    </x-slot>
+    <div class="max-w-7xl mx-auto px-4 py-6">
 
         <!-- Filter Jalur Pendaftaran -->
         <div class="bg-white p-4 shadow rounded-xl mb-6">
@@ -20,12 +24,12 @@
         </div>
 
         <div class="bg-white p-4 shadow rounded-xl overflow-x-auto">
-            <table id="table-siswa" class="display w-full text-sm text-left">
+            <table id="pagination-table" class="display w-full text-sm text-left">
                 <thead class="bg-gray-100 text-gray-700">
                     <tr>
+                        <th>No Pendaftaran</th>
                         <th>Nama</th>
                         <th>NISN</th>
-                        <th>No Pendaftaran</th>
                         <th>Jalur Pendaftaran</th>
                         <th>Status</th>
                         <th>Aksi</th>
@@ -34,15 +38,15 @@
                 <tbody>
                     @foreach ($siswaList as $siswa)
                         <tr>
+                            <td>{{ $siswa->no_pendaftaran }}</td>
                             <td>{{ $siswa->nama_siswa }}</td>
                             <td>{{ $siswa->nisn }}</td>
-                            <td>{{ $siswa->no_pendaftaran }}</td>
                             <td>{{ $siswa->jalur_pendaftaran ? $siswa->jalur_pendaftaran->nama : 'Tidak ada jalur' }}
                             </td>
                             <td
                                 class="
                                 {{ $siswa->status == 'diterima' ? 'text-green-600' : '' }}
-                                {{ $siswa->status == 'ditolak' ? 'text-red-600' : '' }}
+                                {{ $siswa->status == 'tidak_lolos' ? 'text-red-600' : '' }}
                                 {{ $siswa->status == 'verifikasi' ? 'text-yellow-600' : '' }}
                                 {{ $siswa->status == 'tidak_lengkap' ? 'text-gray-600' : '' }}
                             ">
@@ -55,8 +59,8 @@
                                         Butuh diverifikasi
                                     @break
 
-                                    @case('ditolak')
-                                        Ditolak
+                                    @case('tidak_lolos')
+                                        Tidak Lolog
                                     @break
 
                                     @case('verifikasi')
@@ -101,7 +105,7 @@
 
         <script>
             $(document).ready(function() {
-                $('#table-siswa').DataTable();
+                $('#pagination-table').DataTable();
             });
         </script>
     @endpush

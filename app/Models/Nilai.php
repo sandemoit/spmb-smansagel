@@ -13,4 +13,9 @@ class Nilai extends Model
         'nilai',
         'semester'
     ];
+
+    public function siswa()
+    {
+        return $this->belongsTo(Siswa::class);
+    }
 }

@@ -83,8 +83,14 @@ class SiswaController extends Controller
 
             DB::commit();
             if (in_array($siswa->jalur_pendaftaran_id, [5, 6])) {
+                dd($siswa->isComplete());
                 return redirect()->route('siswa.berkas')->with('success', 'Biodata berhasil diperbarui.');
             }
+
+            if ($siswa->isComplete()) {
+                return redirect()->route('dashboard')->with('success', 'Biodata berhasil diperbarui.');
+            }
+
             return redirect()->route('siswa.nilai')->with('success', 'Biodata berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -100,6 +106,9 @@ class SiswaController extends Controller
         // Ambil semua nilai siswa dalam bentuk key => value
         $nilaiTersimpan = Nilai::where('siswa_id', $siswaId)->pluck('nilai', 'nama')->toArray();
 
+        if (Auth::user()->siswa->isNilaiComplete()) {
+            return redirect()->route('dashboard');
+        }
         return view('page.pendaftaran.nilai', compact('nilaiTersimpan', 'siswaId'));
     }
 
@@ -128,6 +137,11 @@ class SiswaController extends Controller
             }
 
             DB::commit();
+
+            if (Auth::user()->siswa->isComplete()) {
+                return redirect()->route('dashboard')->with('success', 'Nilai berhasil diperbarui.');
+            }
+
             return redirect()->route('siswa.berkas')->with('success', 'Nilai berhasil disimpan.');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -162,14 +176,23 @@ class SiswaController extends Controller
             'berkas.*' => 'file|mimes:jpg,jpeg,pdf,pdf|max:2048', // Only PDF files, max 2MB
         ]);
 
+        // Path ke folder berkas di public_html
+        $publicRoot = base_path('../spmb.smanegeri1gelumbang.sch.id'); // Ganti 'username' sesuai nama user cPanel kamu
+        $berkasPath = $publicRoot . '/berkas';
+
         try {
             DB::beginTransaction();
 
+            if (!File::exists($berkasPath)) {
+                File::makeDirectory($berkasPath, 0755, true);
+            }
+
             foreach ($request->file('berkas', []) as $berkasPersyaratanId => $file) {
                 if ($file) {
-                    $filaName = Str::slug($siswa->nama_siswa, '_')  . '.' . $file->getClientOriginalExtension();
-                    $file->move(public_path('berkas'), $filaName);
-                    $path = "berkas/$filaName";
+                    // Tambahkan ID atau timestamp biar nama file unik
+                    $fileName = Str::slug($siswa->nama_siswa, '_') . '_' . $berkasPersyaratanId . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $file->move($berkasPath, $fileName);
+                    $path = "berkas/$fileName";
 
                     Berkas::updateOrCreate(
                         [
