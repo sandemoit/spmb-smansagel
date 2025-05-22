@@ -63,7 +63,7 @@ class SiswaController extends Controller
             // Simpan file jika ada
             if ($request->hasFile('upload_kk')) {
                 $file = $request->file('upload_kk');
-                $fileName = Str::slug($validated['nama_siswa'], '_') . '.' . $file->getClientOriginalExtension();
+                $fileName = Str::slug($validated['nama_siswa'], '_') . '-' . time() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('kk'), $fileName);
                 $validated['upload_kk'] = "kk/$fileName";
             } else {
@@ -72,7 +72,7 @@ class SiswaController extends Controller
 
             if ($request->hasFile('foto_3x4')) {
                 $file = $request->file('foto_3x4');
-                $fileName = Str::slug($validated['nama_siswa'], '_') . '.' . $file->getClientOriginalExtension();
+                $fileName = Str::slug($validated['nama_siswa'], '_') . '-' . time() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('foto'), $fileName);
                 $validated['foto_3x4'] = "foto/$fileName";
             } else {
