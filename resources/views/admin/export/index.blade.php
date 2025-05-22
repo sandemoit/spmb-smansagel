@@ -37,12 +37,24 @@
                             </label>
                             <select id="status" name="status"
                                 class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                <option value="semua">Semua</option>
-                                <option value="tidak_lengkap">Belum Lengkap</option>
-                                <option value="verifikasi">Verifikasi</option>
-                                <option value="pending">Pending</option>
-                                <option value="diterima">Diterima</option>
-                                <option value="tidak_lolos">Tidak Lolos</option>
+                                <option value="semua"
+                                    {{ isset($statusSelected) && $statusSelected == 'semua' ? 'selected' : '' }}>Semua
+                                </option>
+                                <option value="tidak_lengkap"
+                                    {{ isset($statusSelected) && $statusSelected == 'tidak_lengkap' ? 'selected' : '' }}>
+                                    Belum Lengkap</option>
+                                <option value="verifikasi"
+                                    {{ isset($statusSelected) && $statusSelected == 'verifikasi' ? 'selected' : '' }}>
+                                    Verifikasi</option>
+                                <option value="pending"
+                                    {{ isset($statusSelected) && $statusSelected == 'pending' ? 'selected' : '' }}>
+                                    Pending</option>
+                                <option value="diterima"
+                                    {{ isset($statusSelected) && $statusSelected == 'diterima' ? 'selected' : '' }}>
+                                    Diterima</option>
+                                <option value="tidak_lolos"
+                                    {{ isset($statusSelected) && $statusSelected == 'tidak_lolos' ? 'selected' : '' }}>
+                                    Tidak Lolos</option>
                             </select>
                         </div>
 
@@ -57,7 +69,7 @@
                                         Excel (.xlsx)
                                     </label>
                                 </div>
-                                <div class="flex items-center">
+                                {{-- <div class="flex items-center">
                                     <input id="format_pdf" name="format" type="radio" value="pdf"
                                         class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
                                     <label for="format_pdf" class="ml-2 block text-sm text-gray-700">
@@ -70,7 +82,7 @@
                                     <label for="format_csv" class="ml-2 block text-sm text-gray-700">
                                         CSV
                                     </label>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
 
@@ -293,76 +305,65 @@
                                 </div>
                             </div>
 
-                            <!-- Nilai Siswa (Dinamis) -->
+                            <!-- Nilai Siswa dengan per Semester - Dinamis berdasarkan database -->
                             <div class="mt-2 mb-4">
-                                <p class="font-medium text-sm text-gray-600 mb-2">Nilai Siswa</p>
-                                <div class="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
-                                    <div class="flex items-start">
-                                        <div class="flex items-center h-5">
-                                            <input id="col_nilai_matematika" name="columns[]" type="checkbox"
-                                                value="nilai_matematika" checked
-                                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="col_nilai_matematika"
-                                                class="font-medium text-gray-700">Matematika</label>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-start">
-                                        <div class="flex items-center h-5">
-                                            <input id="col_nilai_ipa" name="columns[]" type="checkbox"
-                                                value="nilai_ipa" checked
-                                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="col_nilai_ipa" class="font-medium text-gray-700">IPA</label>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-start">
-                                        <div class="flex items-center h-5">
-                                            <input id="col_nilai_bindo" name="columns[]" type="checkbox"
-                                                value="nilai_bindo" checked
-                                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="col_nilai_bindo" class="font-medium text-gray-700">B.
-                                                Indonesia</label>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-start">
-                                        <div class="flex items-center h-5">
-                                            <input id="col_nilai_binggris" name="columns[]" type="checkbox"
-                                                value="nilai_binggris" checked
-                                                class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
-                                        </div>
-                                        <div class="ml-3 text-sm">
-                                            <label for="col_nilai_binggris" class="font-medium text-gray-700">B.
-                                                Inggris</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                <p class="font-medium text-sm text-gray-600 mb-2">Nilai Siswa (Per Semester)</p>
+                                <div id="nilai-container"
+                                    class="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
+                                    <!-- Contoh nilai berdasarkan format: nilai_{mata_pelajaran}_{semester} -->
+                                    @php
+                                        // Ambil semua kombinasi unik mata pelajaran dan semester dari database
+                                        $nilaiKombinasi = \App\Models\Nilai::select('nama', 'semester')
+                                            ->distinct()
+                                            ->orderBy('nama')
+                                            ->orderBy('semester')
+                                            ->get();
+                                    @endphp
 
-                            <div class="mt-2 mb-4">
-                                <p class="font-medium text-sm text-gray-600 mb-2">Berkas</p>
-                                <div class="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
-                                    @foreach (App\Models\BerkasPersyaratan::all() as $berkas)
+                                    @foreach ($nilaiKombinasi as $nilai)
                                         <div class="flex items-start">
                                             <div class="flex items-center h-5">
-                                                <input disabled data-jalur-id="{{ $berkas->jalur_pendaftaran_id }}"
-                                                    data-berkas-id="{{ $berkas->id }}"
-                                                    id="col_berkas_{{ $berkas->id }}" name="columns[]"
-                                                    type="checkbox" value="berkas_{{ $berkas->id }}"
-                                                    class="berkas-checkbox disabled:opacity-50 focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                <input id="col_nilai_{{ $nilai->nama }}_{{ $nilai->semester }}"
+                                                    name="columns[]" type="checkbox"
+                                                    value="nilai_{{ $nilai->nama }}_{{ $nilai->semester }}" checked
+                                                    class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
                                             </div>
                                             <div class="ml-3 text-sm">
-                                                <label for="col_berkas_{{ $berkas->id }}"
+                                                <label for="col_nilai_{{ $nilai->nama }}_{{ $nilai->semester }}"
                                                     class="font-medium text-gray-700">
-                                                    {{ $berkas->nama_berkas }}
+                                                    {{ ucwords(str_replace('_', ' ', $nilai->nama)) }} - Semester
+                                                    {{ $nilai->semester }}
                                                 </label>
                                             </div>
                                         </div>
                                     @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Berkas Persyaratan - Akan diisi dinamis berdasarkan jalur yang dipilih -->
+                            <div class="mt-2 mb-4">
+                                <p class="font-medium text-sm text-gray-600 mb-2">Berkas Persyaratan</p>
+                                <div id="berkas-container"
+                                    class="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
+                                    <!-- Akan diisi dengan AJAX berdasarkan jalur yang dipilih -->
+                                    @if (isset($berkas))
+                                        @foreach ($berkas as $berkas_item)
+                                            <div class="flex items-start berkas-item"
+                                                data-jalur-id="{{ $berkas_item->jalur_pendaftaran_id }}">
+                                                <div class="flex items-center h-5">
+                                                    <input id="col_berkas_{{ $berkas_item->id }}" name="columns[]"
+                                                        type="checkbox" value="berkas_{{ $berkas_item->id }}" checked
+                                                        class="berkas-checkbox focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                                </div>
+                                                <div class="ml-3 text-sm">
+                                                    <label for="col_berkas_{{ $berkas_item->id }}"
+                                                        class="font-medium text-gray-700">
+                                                        {{ $berkas_item->nama_berkas }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -405,7 +406,30 @@
                                             @foreach ($columns as $column)
                                                 <th scope="col"
                                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                    {{ $column }}
+                                                    @if (strpos($column, 'nilai_') === 0)
+                                                        @php
+                                                            $parts = explode('_', substr($column, 6));
+                                                            if (count($parts) >= 2) {
+                                                                $semester = array_pop($parts);
+                                                                $mapelName = implode(' ', array_map('ucfirst', $parts));
+                                                                echo $mapelName . ' - Semester ' . $semester;
+                                                            } else {
+                                                                echo ucfirst(str_replace('_', ' ', $column));
+                                                            }
+                                                        @endphp
+                                                    @elseif(strpos($column, 'berkas_') === 0)
+                                                        @php
+                                                            $berkasId = substr($column, 7);
+                                                            $berkasPersyaratan = App\Models\BerkasPersyaratan::find(
+                                                                $berkasId,
+                                                            );
+                                                            echo $berkasPersyaratan
+                                                                ? 'Berkas ' . $berkasPersyaratan->nama_berkas
+                                                                : 'Berkas';
+                                                        @endphp
+                                                    @else
+                                                        {{ ucfirst(str_replace('_', ' ', $column)) }}
+                                                    @endif
                                                 </th>
                                             @endforeach
                                         </tr>

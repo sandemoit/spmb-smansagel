@@ -5,8 +5,8 @@ namespace App\Exports;
 use App\Models\Siswa;
 use App\Models\Nilai;
 use App\Models\Berkas;
-use App\Models\BerkasPersyaratan;
 use App\Models\JalurPendaftaran;
+use App\Models\BerkasPersyaratan;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -33,10 +33,7 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
 
         // Jika jalur specific, dapatkan ID jalur
         if ($jalur != 'semua') {
-            $jalurObj = JalurPendaftaran::where('nama', $jalur)->first();
-            if ($jalurObj) {
-                $this->jalurId = $jalurObj->id;
-            }
+            $this->jalurId = $jalur; // Sudah berupa ID
         }
 
         // Mengatur headings berdasarkan kolom yang dipilih
@@ -77,18 +74,24 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             if (isset($columnMappings[$column])) {
                 $this->headings[$column] = $columnMappings[$column];
             }
-            // Cek jika kolom adalah nilai mata pelajaran
+            // Cek jika kolom adalah nilai mata pelajaran dengan semester
             elseif (strpos($column, 'nilai_') === 0) {
-                $mapelName = substr($column, 6); // Ambil nama mapel
-                $this->mapelColumns[] = $mapelName;
-                $this->headings[$column] = 'Nilai ' . ucfirst($mapelName);
+                $parts = explode('_', substr($column, 6)); // Hapus 'nilai_' dari awal
+                if (count($parts) >= 2) {
+                    $semester = array_pop($parts); // Ambil semester dari bagian terakhir
+                    $mapelName = implode(' ', array_map('ucfirst', $parts)); // Gabungkan dan kapitalisasi nama mapel
+
+                    $this->headings[$column] = 'Nilai ' . $mapelName . ' Semester ' . $semester;
+                } else {
+                    $this->headings[$column] = 'Nilai ' . ucfirst(substr($column, 6));
+                }
             }
             // Cek jika kolom adalah berkas
             elseif (strpos($column, 'berkas_') === 0) {
                 $berkasId = substr($column, 7); // Ambil ID berkas
                 $berkasPersyaratan = BerkasPersyaratan::find($berkasId);
                 if ($berkasPersyaratan) {
-                    $this->berkasColumns[$berkasId] = $berkasPersyaratan->nama;
+                    $this->berkasColumns[$berkasId] = $berkasPersyaratan->nama_berkas;
                     $this->headings[$column] = 'Berkas ' . $berkasPersyaratan->nama_berkas;
                 }
             }
@@ -100,19 +103,17 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
      */
     public function collection()
     {
-        $query = Siswa::with(['nilai', 'berkas', 'jalur_pendaftaran', 'user']);
+        $query = Siswa::with(['nilai', 'berkas.berkas_persyaratan', 'jalur_pendaftaran', 'user']);
 
         // Filter berdasarkan jalur
         if ($this->jalur != 'semua') {
-            $query->whereHas('jalur_pendaftaran', function ($q) {
-                $q->where('nama', $this->jalur);
-            });
+            $query->where('jalur_pendaftaran_id', $this->jalur);
         }
 
         // Filter berdasarkan status
         if ($this->status != 'semua') {
             switch ($this->status) {
-                case 'belum_lengkap':
+                case 'tidak_lengkap':
                     $query->where('is_complete', false);
                     break;
                 case 'verifikasi':
@@ -152,7 +153,7 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
         foreach (array_keys($this->headings) as $column) {
             // Kolom dasar siswa
             if (in_array($column, ['nama_siswa', 'nisn', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'no_hp', 'sekolah_asal', 'tahun_lulus', 'nik', 'nama_ayah', 'nama_ibu', 'pekerjaan_ayah', 'pekerjaan_ibu', 'penghasilan_ayah', 'penghasilan_ibu', 'alamat'])) {
-                $row[] = $siswa->$column;
+                $row[] = $siswa->$column ?? '-';
             }
             // Jalur pendaftaran
             elseif ($column == 'jalur') {
@@ -160,19 +161,31 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
             }
             // Status
             elseif ($column == 'status') {
-                $row[] = $siswa->status;
+                $row[] = $siswa->status ?? '-';
             }
-            // Nilai mata pelajaran
+            // Nilai mata pelajaran dengan semester
             elseif (strpos($column, 'nilai_') === 0) {
-                $mapelName = substr($column, 6); // Ambil nama mapel
-                $nilaiObj = $siswa->nilai->where('nama', $mapelName)->first();
-                $row[] = $nilaiObj ? $nilaiObj->nilai : '-';
+                $parts = explode('_', substr($column, 6)); // Hapus 'nilai_' dari awal
+                if (count($parts) >= 2) {
+                    $semester = array_pop($parts); // Ambil semester dari bagian terakhir
+                    $mapelName = implode('_', $parts); // Gabungkan kembali nama mapel
+
+                    $nilaiObj = $siswa->nilai->where('nama', $mapelName)->where('semester', $semester)->first();
+                    $row[] = $nilaiObj ? $nilaiObj->nilai : '-';
+                } else {
+                    // Fallback jika format tidak sesuai
+                    $row[] = '-';
+                }
             }
             // Berkas persyaratan
             elseif (strpos($column, 'berkas_') === 0) {
                 $berkasId = substr($column, 7); // Ambil ID berkas
                 $berkasObj = $siswa->berkas->where('berkas_persyaratan_id', $berkasId)->first();
-                $row[] = $berkasObj ? $baseUrl . $berkasObj->path_upload : '-';
+                if ($berkasObj && $berkasObj->path_upload) {
+                    $row[] = $baseUrl . '/storage/' . $berkasObj->path_upload;
+                } else {
+                    $row[] = '-';
+                }
             }
         }
 
