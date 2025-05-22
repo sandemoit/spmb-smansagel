@@ -28,16 +28,16 @@ jobs:
       run: |
         ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} << 'EOF'
           # Hapus lama
-          rm -rf ~/laravel-deploy || true
+          rm -rf ~/var/www/html || true
 
           # Tarik ulang repo (harus pake rsync atau scp)
-          mkdir -p ~/laravel-deploy
+          mkdir -p ~/var/www/html
         EOF
 
-        rsync -avz ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }}:~/laravel-deploy
+        rsync -avz ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }}:~/var/www/html
 
         ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} << 'EOF'
-          cd ~/laravel-deploy
+          cd ~/var/www/html
 
           # Ganti env
           cp .env.production .env
