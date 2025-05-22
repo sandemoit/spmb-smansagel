@@ -39,13 +39,8 @@
                 <a href="https://smanegeri1gelumbang.sch.id/data-sekolah/"
                     class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Kontak</a>
                 @auth
-                    @if (Auth::user()->role == 'admin')
-                        <a href="{{ url('/admin/dashboard') }}"
-                            class="block px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">Dashboard</a>
-                    @else
-                        <a href="{{ url('/dashboard') }}"
-                            class="block px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">Dashboard</a>
-                    @endif
+                    <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}"
+                        class="block px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">Dashboard</a>
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
