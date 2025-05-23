@@ -29,7 +29,7 @@ class Export extends Controller
             // If "semua" is selected, get all unique berkas across all jalur
             $berkas = BerkasPersyaratan::all();
         } else {
-            $jalur = JalurPendaftaran::where('nama', $jalurId)->first();
+            $jalur = JalurPendaftaran::find($jalurId);
             if ($jalur) {
                 // Get berkas specific to this jalur and any default berkas
                 $berkas = BerkasPersyaratan::where('jalur_pendaftaran_id', $jalur->id)
@@ -40,7 +40,7 @@ class Export extends Controller
             }
         }
 
-        return response()->json(['berkas' => $berkas]);
+        return response()->json($berkas);
     }
 
     public function exportSiswa(Request $request)
@@ -58,21 +58,18 @@ class Export extends Controller
         $columns = $request->columns;
         $action = $request->action;
 
-        // Query dasar
-        $query = Siswa::with(['nilai', 'berkas', 'jalur_pendaftaran', 'user'])
-            ->select('siswa.*');
+        // Query dasar dengan relasi yang diperlukan
+        $query = Siswa::with(['nilai', 'berkas.berkas_persyaratan', 'jalur_pendaftaran', 'user']);
 
         // Filter berdasarkan jalur
         if ($jalur != 'semua') {
-            $query->whereHas('jalur_pendaftaran', function ($q) use ($jalur) {
-                $q->where('nama', $jalur);
-            });
+            $query->where('jalur_pendaftaran_id', $jalur);
         }
 
         // Filter berdasarkan status
         if ($status != 'semua') {
             switch ($status) {
-                case 'belum_lengkap':
+                case 'tidak_lengkap':
                     $query->where('is_complete', false);
                     break;
                 case 'verifikasi':
@@ -100,10 +97,12 @@ class Export extends Controller
 
             // Kembalikan view dengan data preview
             $jalurList = JalurPendaftaran::all();
+            $jalurSelected = null;
 
             // Get the berkas persyaratan for the selected jalur
             if ($jalur != 'semua') {
-                $jalurObj = JalurPendaftaran::where('nama', $jalur)->first();
+                $jalurObj = JalurPendaftaran::find($jalur);
+                $jalurSelected = $jalurObj ? $jalurObj->nama : null;
                 $berkas = $jalurObj ?
                     BerkasPersyaratan::where('jalur_pendaftaran_id', $jalurObj->id)
                     ->orWhereNull('jalur_pendaftaran_id')
@@ -113,7 +112,7 @@ class Export extends Controller
                 $berkas = BerkasPersyaratan::all();
             }
 
-            return view('admin.export.index', compact('preview', 'columns', 'total', 'jalurList', 'jalur', 'status', 'berkas'));
+            return view('admin.export.index', compact('preview', 'columns', 'total', 'jalurList', 'jalurSelected', 'status', 'berkas'));
         }
 
         // Untuk download, proses export
@@ -142,7 +141,7 @@ class Export extends Controller
             foreach ($columns as $column) {
                 // Kolom dasar siswa
                 if (in_array($column, ['nama_siswa', 'nisn', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'no_hp', 'sekolah_asal', 'tahun_lulus', 'nik', 'foto_3x4', 'nama_ayah', 'nama_ibu', 'pekerjaan_ayah', 'pekerjaan_ibu', 'penghasilan_ayah', 'penghasilan_ibu', 'alamat'])) {
-                    $row[$column] = $s->$column;
+                    $row[$column] = $s->$column ?? '-';
                 }
                 // Jalur pendaftaran
                 elseif ($column == 'jalur') {
@@ -150,19 +149,31 @@ class Export extends Controller
                 }
                 // Status
                 elseif ($column == 'status') {
-                    $row[$column] = $s->status;
+                    $row[$column] = $s->status ?? '-';
                 }
-                // Nilai
+                // Nilai dengan format nama_semester (contoh: matematika_1, ipa_2)
                 elseif (strpos($column, 'nilai_') === 0) {
-                    $mapelName = substr($column, 6); // Ambil nama mapel (setelah 'nilai_')
-                    $nilaiObj = $s->nilai->where('nama', $mapelName)->first();
-                    $row[$column] = $nilaiObj ? $nilaiObj->nilai : '-';
+                    $parts = explode('_', substr($column, 6)); // Hapus 'nilai_' dari awal
+                    if (count($parts) >= 2) {
+                        $semester = array_pop($parts); // Ambil semester dari bagian terakhir
+                        $mapelName = implode('_', $parts); // Gabungkan kembali nama mapel
+
+                        $nilaiObj = $s->nilai->where('nama', $mapelName)->where('semester', $semester)->first();
+                        $row[$column] = $nilaiObj ? $nilaiObj->nilai : '-';
+                    } else {
+                        // Fallback jika format tidak sesuai
+                        $row[$column] = '-';
+                    }
                 }
                 // Berkas
                 elseif (strpos($column, 'berkas_') === 0) {
                     $berkasId = substr($column, 7); // Ambil id berkas (setelah 'berkas_')
                     $berkasObj = $s->berkas->where('berkas_persyaratan_id', $berkasId)->first();
-                    $row[$column] = $berkasObj ? $baseUrl . $berkasObj->path_upload : '-';
+                    if ($berkasObj && $berkasObj->path_upload) {
+                        $row[$column] = $baseUrl . '/' . $berkasObj->path_upload;
+                    } else {
+                        $row[$column] = '-';
+                    }
                 }
             }
 
@@ -174,8 +185,9 @@ class Export extends Controller
 
     public function getByJalur($id)
     {
-        // Bisa juga include data berkas secara lengkap
-        $berkas = BerkasPersyaratan::where('jalur_pendaftaran_id', $id)->get(['id']);
+        $berkas = BerkasPersyaratan::where('jalur_pendaftaran_id', $id)
+            ->orWhereNull('jalur_pendaftaran_id')
+            ->get(['id', 'nama_berkas']);
         return response()->json($berkas);
     }
 }
