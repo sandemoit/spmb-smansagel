@@ -49,26 +49,28 @@ class SiswaController extends Controller
             'penghasilan_ayah' => 'required|string',
             'penghasilan_ibu' => 'required|string',
             'jalur_pendaftaran_id' => 'required|exists:jalur_pendaftaran,id',
-            'latitude' => 'required|string',
-            'longitude' => 'required|string',
-            'upload_kk' => 'nullable|file|mimes:jpg,jpeg,png',
+            // 'upload_kk' => 'required|string',
             'foto_3x4' => 'nullable|file|mimes:jpg,jpeg,png',
-            'jarak_kesekolah' => 'required|numeric',
+            'jarak_kesekolah' => 'string',
             'alamat' => 'required|string',
         ]);
 
         try {
             DB::beginTransaction();
 
+            $validated['upload_kk'] = $request->upload_kk ?? '-';
+            $validated['latitude'] = $request->latitude ?? '-';
+            $validated['longitude'] = $request->longitude ?? '-';
+
             // Simpan file jika ada
-            if ($request->hasFile('upload_kk')) {
-                $file = $request->file('upload_kk');
-                $fileName = Str::slug($validated['nama_siswa'], '_') . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('kk'), $fileName);
-                $validated['upload_kk'] = "kk/$fileName";
-            } else {
-                $validated['upload_kk'] = 'Tidak wajib';
-            }
+            // if ($request->hasFile('upload_kk')) {
+            //     $file = $request->file('upload_kk');
+            //     $fileName = Str::slug($validated['nama_siswa'], '_') . '.' . $file->getClientOriginalExtension();
+            //     $file->move(public_path('kk'), $fileName);
+            //     $validated['upload_kk'] = "kk/$fileName";
+            // } else {
+            //     $validated['upload_kk'] = 'Tidak wajib';
+            // }
 
             if ($request->hasFile('foto_3x4')) {
                 $file = $request->file('foto_3x4');
@@ -173,7 +175,7 @@ class SiswaController extends Controller
         $siswa = Siswa::where('user_id', $user->id)->firstOrFail();
 
         $request->validate([
-            'berkas.*' => 'file|mimes:jpg,jpeg,pdf,pdf|max:2048', // Only PDF files, max 2MB
+            'berkas.*' => 'file|mimes:jpg,jpeg,png,pdf|max:2048', // Only PDF files, max 2MB
         ]);
 
         // Path ke folder berkas di public_html

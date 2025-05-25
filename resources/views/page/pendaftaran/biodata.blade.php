@@ -53,21 +53,21 @@
                     <h2 class="text-xl font-semibold">Biodata Siswa</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label>Nama Lengkap</label>
+                            <label>Nama Lengkap <span class="text-red-500">*</span></label>
                             <input type="text" name="nama_siswa" value="{{ old('nama_siswa', $siswa->nama_siswa) }}"
                                 class="w-full border rounded p-2" required>
                             <x-input-error :messages="$errors->get('nama_siswa')" class="mt-2" />
                         </div>
 
                         <div>
-                            <label>NISN</label>
+                            <label>NISN <span class="text-red-500">*</span></label>
                             <input type="text" name="nisn" value="{{ old('nisn', $siswa->nisn) }}"
                                 class="w-full border rounded p-2" required>
                             <x-input-error :messages="$errors->get('nisn')" class="mt-2" />
                         </div>
 
                         <div>
-                            <label>Tempat Lahir</label>
+                            <label>Tempat Lahir <span class="text-red-500">*</span></label>
                             <input type="text" name="tempat_lahir"
                                 value="{{ old('tempat_lahir', $siswa->tempat_lahir) }}"
                                 class="w-full border rounded p-2" required>
@@ -75,7 +75,7 @@
                         </div>
 
                         <div>
-                            <label>Tanggal Lahir</label>
+                            <label>Tanggal Lahir <span class="text-red-500">*</span></label>
                             <input type="date" name="tanggal_lahir"
                                 value="{{ old('tanggal_lahir', $siswa->tanggal_lahir) }}"
                                 class="w-full border rounded p-2" required>
@@ -83,7 +83,7 @@
                         </div>
 
                         <div>
-                            <label>Jenis Kelamin</label>
+                            <label>Jenis Kelamin <span class="text-red-500">*</span></label>
                             <select name="jenis_kelamin" class="w-full border rounded p-2" required>
                                 <option value="Laki-laki" {{ $siswa->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>
                                     Laki-laki
@@ -96,21 +96,21 @@
                         </div>
 
                         <div>
-                            <label>Agama</label>
+                            <label>Agama <span class="text-red-500">*</span></label>
                             <input type="text" name="agama" value="{{ old('agama', $siswa->agama) }}"
                                 class="w-full border rounded p-2" required>
                             <x-input-error :messages="$errors->get('agama')" class="mt-2" />
                         </div>
 
                         <div>
-                            <label>No. HP</label>
+                            <label>No. HP <span class="text-red-500">*</span></label>
                             <input type="text" name="no_hp" value="{{ old('no_hp', $siswa->no_hp) }}"
                                 class="w-full border rounded p-2" required>
                             <x-input-error :messages="$errors->get('no_hp')" class="mt-2" />
                         </div>
 
                         <div>
-                            <label>Asal Sekolah</label>
+                            <label>Asal Sekolah <span class="text-red-500">*</span></label>
                             <input type="text" name="sekolah_asal"
                                 value="{{ old('sekolah_asal', $siswa->sekolah_asal) }}"
                                 class="w-full border rounded p-2" required>
@@ -118,17 +118,17 @@
                         </div>
 
                         <div>
-                            <label>Tahun Lulus</label>
+                            <label>Tahun Lulus <span class="text-red-500">*</span></label>
                             <input type="number" name="tahun_lulus"
                                 value="{{ old('tahun_lulus', $siswa->tahun_lulus) }}" class="w-full border rounded p-2"
                                 required>
                             <x-input-error :messages="$errors->get('tahun_lulus')" class="mt-2" />
                         </div>
 
-                        <div>
+                        {{-- <div>
                             <label>Latitude</label>
                             <input type="text" name="latitude" value="{{ old('latitude', $siswa->latitude) }}"
-                                class="w-full border rounded p-2" placeholder="Contoh: -2.9630674216609267" required>
+                                class="w-full border rounded p-2" placeholder="Contoh: -2.9630674216609267">
                             <span class="text-blue-500 underline"><a
                                     href="https://www.youtube.com/watch?v=Xha1RTiZ5zQ">Lihat tutorial nya disini jika
                                     belum paham</a></span>
@@ -138,47 +138,37 @@
                         <div>
                             <label>Longitude</label>
                             <input type="text" name="longitude" value="{{ old('longitude', $siswa->longitude) }}"
-                                class="w-full border rounded p-2" placeholder="Contoh: 104.8078575551942" required>
+                                class="w-full border rounded p-2" placeholder="Contoh: 104.8078575551942">
                             <span class="text-blue-500 underline"><a
                                     href="https://www.youtube.com/watch?v=Xha1RTiZ5zQ">Lihat tutorial nya disini jika
                                     belum paham</a></span>
                             <x-input-error :messages="$errors->get('longitude')" class="mt-2" />
-                        </div>
+                        </div> --}}
 
                         <div>
                             <label>Jarak Kesekolah</label>
                             <input type="number" name="jarak_kesekolah" value="{{ $siswa->jarak_kesekolah }}"
-                                class="disabled:opacity-50 w-full border rounded p-2"
-                                placeholder="Muncul Setelah Submit">
+                                class="disabled:opacity-50 w-full border rounded p-2" placeholder="Jarak ke sekolah">
                             <x-input-error :messages="$errors->get('jarak_kesekolah')" class="mt-2" />
                         </div>
 
                         <div>
-                            <label>Photo (3 x 4) </label>
+                            <label>Photo (3 x 4) <span class="text-red-500">*</span></label>
                             <input type="file" name="foto_3x4" value="{{ old('foto_3x4', $siswa->foto_3x4) }}"
-                                class="w-full border rounded p-2">
+                                class="w-full border rounded p-2" required>
                             <span class="text-red-500 text-sm block">* Format JPEG, PNG, JPG, PDF</span>
                             <x-input-error :messages="$errors->get('foto_3x4')" class="mt-2" />
                         </div>
 
                         <div>
-                            <label>KK (Kartu Keluarga)</label>
-                            <input type="file" name="upload_kk" value="{{ old('upload_kk', $siswa->upload_kk) }}"
-                                class="w-full border rounded p-2">
-                            <span class="text-red-500 text-sm block">* KK harus dilegalisir kelurahan | Format JPEG,
-                                PNG, JPG, PDF</span>
-                            <x-input-error :messages="$errors->get('upload_kk')" class="mt-2" />
-                        </div>
-
-                        <div>
-                            <label>NIK (Nomor Induk Keluarga)</label>
+                            <label>NIK (Nomor Induk Keluarga) <span class="text-red-500">*</span></label>
                             <input type="text" name="nik" value="{{ old('nik', $siswa->nik) }}"
-                                class="w-full border rounded p-2" required>
+                                class="w-full border rounded p-2" placeholder="16 Digit Angka" required>
                             <x-input-error :messages="$errors->get('nik')" class="mt-2" />
                         </div>
 
                         <div>
-                            <label>Jalur Pendaftaran</label>
+                            <label>Jalur Pendaftaran <span class="text-red-500">*</span></label>
                             <select name="jalur_pendaftaran_id" class="w-full border rounded p-2" required>
                                 @foreach ($jalurs as $jalur)
                                     <option value="{{ $jalur->id }}"
@@ -192,7 +182,7 @@
                     </div>
 
                     <div class="mt-6">
-                        <label>Alamat Lengkap</label>
+                        <label>Alamat Lengkap <span class="text-red-500">*</span></label>
                         <textarea name="alamat" rows="4" class="w-full border rounded p-2" required>{{ old('alamat', $siswa->alamat) }}</textarea>
                         <x-input-error :messages="$errors->get('alamat')" class="mt-2" />
 
@@ -201,14 +191,14 @@
                     <h2 class="text-xl font-semibold mt-4">Biodata Orang Tua</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label>Nama Ayah</label>
+                            <label>Nama Ayah <span class="text-red-500">*</span></label>
                             <input type="text" name="nama_ayah" value="{{ old('nama_ayah', $siswa->nama_ayah) }}"
                                 class="w-full border rounded p-2" required>
                             <x-input-error :messages="$errors->get('nama_ayah')" class="mt-2" />
                         </div>
 
                         <div>
-                            <label>Pekerjaan Ayah</label>
+                            <label>Pekerjaan Ayah <span class="text-red-500">*</span></label>
                             <input type="text" name="pekerjaan_ayah"
                                 value="{{ old('pekerjaan_ayah', $siswa->pekerjaan_ayah) }}"
                                 class="w-full border rounded p-2" required>
@@ -216,7 +206,7 @@
                         </div>
 
                         <div>
-                            <label>Penghasilan Ayah</label>
+                            <label>Penghasilan Ayah <span class="text-red-500">*</span></label>
                             <input type="number" name="penghasilan_ayah"
                                 value="{{ old('penghasilan_ayah', $siswa->penghasilan_ayah) }}"
                                 class="w-full border rounded p-2" required>
@@ -224,14 +214,14 @@
                         </div>
 
                         <div>
-                            <label>Nama Ibu</label>
+                            <label>Nama Ibu <span class="text-red-500">*</span></label>
                             <input type="text" name="nama_ibu" value="{{ old('nama_ibu', $siswa->nama_ibu) }}"
                                 class="w-full border rounded p-2" required>
                             <x-input-error :messages="$errors->get('nama_ibu')" class="mt-2" />
                         </div>
 
                         <div>
-                            <label>Pekerjaan Ibu</label>
+                            <label>Pekerjaan Ibu <span class="text-red-500">*</span></label>
                             <input type="text" name="pekerjaan_ibu"
                                 value="{{ old('pekerjaan_ibu', $siswa->pekerjaan_ibu) }}"
                                 class="w-full border rounded p-2" required>
@@ -239,7 +229,7 @@
                         </div>
 
                         <div>
-                            <label>Penghasilan Ibu</label>
+                            <label>Penghasilan Ibu <span class="text-red-500">*</span></label>
                             <input type="number" name="penghasilan_ibu"
                                 value="{{ old('penghasilan_ibu', $siswa->penghasilan_ibu) }}"
                                 class="w-full border rounded p-2" required>

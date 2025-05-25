@@ -13,6 +13,7 @@ Route::middleware(CheckRole::class)->prefix('admin')->group(function () {
   Route::get('/pendaftaran/{id}', [PendaftaranController::class, 'show'])->name('pendaftaran.show');
   Route::delete('/pendaftaran/{id}', [PendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
   Route::put('/updateStatus/{id}', [PendaftaranController::class, 'updateStatus'])->name('admin.updateStatus');
+  Route::put('/pendaftaran/reset-password/{id}', [PendaftaranController::class, 'resetPassword'])->name('admin.reset.password');
 
   Route::get('/data-siswa/{no_pendaftaran}/pdf', [PendaftaranController::class, 'lembarVerifikasi'])->name('data.siswa.pdf');
 

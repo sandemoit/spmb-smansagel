@@ -30,6 +30,7 @@
                         <th>No Pendaftaran</th>
                         <th>Nama</th>
                         <th>NISN</th>
+                        <th>Email</th>
                         <th>Jalur Pendaftaran</th>
                         <th>Status</th>
                         <th>Aksi</th>
@@ -41,6 +42,7 @@
                             <td>{{ $siswa->no_pendaftaran }}</td>
                             <td>{{ $siswa->nama_siswa }}</td>
                             <td>{{ $siswa->nisn }}</td>
+                            <td>{{ $siswa->user->email }}</td>
                             <td>{{ $siswa->jalur_pendaftaran ? $siswa->jalur_pendaftaran->nama : 'Tidak ada jalur' }}
                             </td>
                             <td
@@ -60,7 +62,7 @@
                                     @break
 
                                     @case('tidak_lolos')
-                                        Tidak Lolog
+                                        Tidak Lolos
                                     @break
 
                                     @case('verifikasi')
@@ -87,6 +89,15 @@
                                     @method('DELETE')
                                     <button type="submit"
                                         class="text-red-600 hover:underline focus:outline-none">Hapus</button>
+                                </form>
+
+                                <form action="{{ route('admin.reset.password', $siswa->user->id) }}" method="POST"
+                                    onsubmit="return confirm('Yakin ingin mereset password?')">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit"
+                                        class="text-orange-600 hover:underline focus:outline-none">Reset
+                                        Password</button>
                                 </form>
                             </td>
                         </tr>

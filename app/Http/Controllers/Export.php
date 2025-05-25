@@ -170,7 +170,7 @@ class Export extends Controller
                     $berkasId = substr($column, 7); // Ambil id berkas (setelah 'berkas_')
                     $berkasObj = $s->berkas->where('berkas_persyaratan_id', $berkasId)->first();
                     if ($berkasObj && $berkasObj->path_upload) {
-                        $row[$column] = $baseUrl . '/storage/' . $berkasObj->path_upload;
+                        $row[$column] = $baseUrl . '/' . $berkasObj->path_upload;
                     } else {
                         $row[$column] = '-';
                     }

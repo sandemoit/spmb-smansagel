@@ -182,7 +182,7 @@ class SiswaExport implements FromCollection, WithHeadings, WithMapping, ShouldAu
                 $berkasId = substr($column, 7); // Ambil ID berkas
                 $berkasObj = $siswa->berkas->where('berkas_persyaratan_id', $berkasId)->first();
                 if ($berkasObj && $berkasObj->path_upload) {
-                    $row[] = $baseUrl . '/storage/' . $berkasObj->path_upload;
+                    $row[] = $baseUrl . '/' . $berkasObj->path_upload;
                 } else {
                     $row[] = '-';
                 }

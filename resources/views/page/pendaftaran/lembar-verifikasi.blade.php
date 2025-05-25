@@ -222,7 +222,13 @@
             </tr>
         </thead>
         <tbody>
+            @php
+                $totalnilai = 0;
+            @endphp
             @foreach ($nilais as $index => $nilai)
+                @php
+                    $totalnilai += $nilai->nilai;
+                @endphp
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $nilai->nama }}</td>
@@ -230,12 +236,16 @@
                     <td>{{ $nilai->nilai }}</td>
                 </tr>
             @endforeach
+            <tr>
+                <td colspan="3" class="text-center">Rata-Rata</td>
+                <td>{{ number_format($totalnilai / 25, 2) }}</td>
+            </tr>
         </tbody>
     </table>
 
     <br><br>
     <div style="text-align: right; font-style: italic; margin-bottom: 10px;">
-        Gelumbang, ......, Mei 2025
+        Gelumbang, _____, _________ 2025
     </div>
     <table style="width:100%;">
         <!-- Baris Atas -->

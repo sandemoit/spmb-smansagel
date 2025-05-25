@@ -7,11 +7,11 @@
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-8">
         <ol
-            class="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
+            class="flex items-center w-full text-sm font-medium text-center text-gray-500 sm:text-base">
             <li
-                class="flex md:w-full items-center text-blue-600 dark:text-blue-500 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700">
+                class="flex md:w-full items-center text-blue-600 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
                 <span
-                    class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+                    class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200">
                     <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor" viewBox="0 0 20 20">
                         <path
@@ -21,9 +21,9 @@
                 </span>
             </li>
             <li
-                class="flex md:w-full items-center text-blue-600 dark:text-blue-500 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700">
+                class="flex md:w-full items-center text-blue-600 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
                 <span
-                    class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+                    class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200">
                     <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor" viewBox="0 0 20 20">
                         <path
@@ -33,9 +33,9 @@
                 </span>
             </li>
             <li
-                class="flex md:w-full items-center text-blue-600 dark:text-blue-500 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700">
+                class="flex md:w-full items-center text-blue-600 sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
                 <span
-                    class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
+                    class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200">
                     <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor" viewBox="0 0 20 20">
                         <path
@@ -44,7 +44,7 @@
                     Masukan <span class="hidden sm:inline-flex sm:ms-2">Nilai</span>
                 </span>
             </li>
-            <li class="flex items-center text-blue-600 dark:text-blue-500">
+            <li class="flex items-center text-blue-600">
                 <span class="me-2">4</span>
                 Unggah <span class="hidden sm:inline-flex sm:ms-2">Dokumen
             </li>
@@ -79,7 +79,8 @@
                             <input type="file" accept=".pdf,.jpg,.jpeg,.png" onchange="checkFileSize(this)"
                                 name="berkas[{{ $berkas->id }}]" class="mt-1 block w-full"
                                 {{ $berkas->is_required ? 'required' : '' }}>
-                            <span class="text-xs text-red-500">* File harus berformat PDF dan MAX. 2MB</span>
+                            <span class="text-xs text-red-500">* File harus berformat JPG,JPEG, PNG, PDF dan MAX.
+                                2MB</span>
                         </div>
                     @endforeach
 

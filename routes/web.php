@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,8 +18,8 @@ Route::middleware('auth')->group(function () {
     require __DIR__ . '/admin.php';
 });
 
-Route::get('/cek-path', function () {
-    return public_path();
+Route::get('/clear-cache', function () {
+    Artisan::call('optimize');
 });
 
 require __DIR__ . '/auth.php';

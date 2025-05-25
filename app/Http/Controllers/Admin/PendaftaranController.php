@@ -8,9 +8,11 @@ use App\Models\Nilai;
 use App\Models\Berkas;
 use App\Models\BerkasPersyaratan;
 use App\Models\JalurPendaftaran;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use DataTables;
+use Illuminate\Support\Facades\Hash;
 
 class PendaftaranController extends Controller
 {
@@ -20,7 +22,7 @@ class PendaftaranController extends Controller
         $jalurList = JalurPendaftaran::all();
 
         // Query dasar
-        $query = Siswa::with('jalur_pendaftaran')
+        $query = Siswa::with('jalur_pendaftaran', 'user')
             ->select(['id', 'nama_siswa', 'nisn', 'no_pendaftaran', 'status', 'jalur_pendaftaran_id', 'user_id'])
             ->whereHas('user', function ($query) {
                 $query->where('role', 'siswa');
@@ -100,6 +102,15 @@ class PendaftaranController extends Controller
         $pdf = Pdf::loadView('page.pendaftaran.lembar-verifikasi', compact('siswa', 'nilais', 'jalur'))
             ->setPaper('a4', 'portrait');
 
-        return $pdf->download('lembar_verifikasi_' . $siswa->nama_siswa . '.pdf');
+        return $pdf->download('Bukti_Pendaftaran' . $siswa->nama_siswa . '.pdf');
+    }
+
+    public function resetPassword($id)
+    {
+        $user = User::where('role', 'siswa')->findOrFail($id);
+        $user->password = Hash::make('12345678');
+        $user->save();
+
+        return redirect()->back()->with('success', 'Password berhasil direset menjadi 12345678');
     }
 }
